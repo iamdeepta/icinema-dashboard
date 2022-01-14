@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./css/signout.scss";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../context/authContext/AuthContext";
+import { login } from "../context/authContext/apiCalls";
 
 const Signout = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { isFetching, dispatch } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
-  const gotoHome = () => {
-    navigate("/");
+  const signIn = () => {
+    if (username !== "" && password !== "") {
+      login({ username, password }, dispatch);
+      //navigate("/");
+    } else {
+      toast.error("Please fill up all the fields");
+    }
   };
   return (
     <>
+      <ToastContainer />
       {/* <!-- sign in --> */}
       <div className="sign section--bg" data-bg="img/bg.jpg">
         <div className="container">
@@ -27,7 +41,8 @@ const Signout = () => {
                     <input
                       type="text"
                       className="sign__input"
-                      placeholder="Email"
+                      placeholder="Username"
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
 
@@ -36,6 +51,7 @@ const Signout = () => {
                       type="password"
                       className="sign__input"
                       placeholder="Password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
 
@@ -52,7 +68,8 @@ const Signout = () => {
                   <button
                     className="sign__btn"
                     type="button"
-                    onClick={gotoHome}
+                    onClick={signIn}
+                    disabled={isFetching}
                   >
                     Sign in
                   </button>

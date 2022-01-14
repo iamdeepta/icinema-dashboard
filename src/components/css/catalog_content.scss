@@ -1,0 +1,28 @@
+.main__table-wrap {
+  height: 80vh !important;
+
+  @media screen and (min-width: 800px) and (max-width: 1195px) {
+    height: 65vh !important;
+  }
+  @media screen and (max-width: 799px) {
+    height: auto !important;
+  }
+}
+
+.main__table-text {
+  img {
+    height: 30px;
+    width: auto;
+  }
+}
+
+#modal-delete {
+  position: fixed !important;
+
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  z-index: 999;
+  box-shadow: 0px 10px 10px 20px rgb(0.2, 0.2, 0.2, 0.2);
+}

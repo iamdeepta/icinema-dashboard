@@ -1,13 +1,17 @@
 import React from "react";
-import { deleteMovie } from "../context/movieContext/apiCalls";
-
+import { toast } from "react-toastify";
+import { deleteUser } from "../context/userContext/apiCalls";
 import "./css/catalog_content.scss";
 
-const CatalogModals = ({ selectedId, setSelectedId, dispatch }) => {
+const UserModals = ({ selectedId, setSelectedId, error, dispatch }) => {
   const deleteItem = (id) => {
-    deleteMovie(id, dispatch);
-
+    deleteUser(id, dispatch);
     setSelectedId(null);
+    if (!error) {
+      toast.success("User Deleted Successfully");
+    } else {
+      toast.error("User cannot be deleted. Try again.");
+    }
   };
   return (
     <>
@@ -32,10 +36,10 @@ const CatalogModals = ({ selectedId, setSelectedId, dispatch }) => {
 
       {/* <!-- modal delete --> */}
       <div id="modal-delete" className="zoom-anim-dialog modal">
-        <h6 className="modal__title">Item delete</h6>
+        <h6 className="modal__title">User delete</h6>
 
         <p className="modal__text">
-          Are you sure to permanently delete this item?
+          Are you sure to permanently delete this user?
         </p>
 
         <div className="modal__btns">
@@ -60,4 +64,4 @@ const CatalogModals = ({ selectedId, setSelectedId, dispatch }) => {
   );
 };
 
-export default CatalogModals;
+export default UserModals;

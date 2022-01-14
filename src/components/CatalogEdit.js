@@ -1,118 +1,102 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { updateMovie } from "../context/movieContext/apiCalls";
+import { MovieContext } from "../context/movieContext/MovieContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//import storage from "../firebase";
-import { createMovie } from "../context/movieContext/apiCalls";
-import { MovieContext } from "../context/movieContext/MovieContext";
+import { useNavigate } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
+// import { getMovies } from "../context/movieContext/apiCalls";
+// import { MovieContext } from "../context/movieContext/MovieContext";
+// import axios from "axios";
 import axios from "axios";
 import { ProgressBar } from "react-bootstrap";
 import "./css/add_item.scss";
+import AppUrl from "../classes/AppUrl";
 
-const AddItem = () => {
-  const [title, setTitle] = useState(null);
-  const [desc, setDesc] = useState(null);
-  const [year, setYear] = useState(null);
-  const [time, setTime] = useState(null);
-  const [genre, setGenre] = useState(null);
-  const [age, setAge] = useState(null);
-  const [cast, setCast] = useState(null);
-  const [director, setDirector] = useState(null);
-  const [writer, setWriter] = useState(null);
-  const [type, setType] = useState(null);
-  const [img, setImg] = useState(null);
-  const [imgTitle, setImgTitle] = useState(null);
-  const [imgSm, setImgSm] = useState(null);
-  const [trailer, setTrailer] = useState(null);
-  const [video, setVideo] = useState(null);
-  const [episode, setEpisode] = useState(null);
-  const [season, setSeason] = useState(null);
+const CatalogEdit = ({ mov }) => {
+  const [id, setId] = useState(mov._id);
+  const [title, setTitle] = useState(mov.title);
+  const [desc, setDesc] = useState(mov.desc);
+  const [year, setYear] = useState(mov.year);
+  const [time, setTime] = useState(mov.time);
+  const [genre, setGenre] = useState(mov.genre);
+  const [age, setAge] = useState(mov.age);
+  const [cast, setCast] = useState(mov.cast);
+  const [director, setDirector] = useState(mov.director);
+  const [writer, setWriter] = useState(mov.writer);
+  const [type, setType] = useState(mov.type);
+  const [img, setImg] = useState(mov.img);
+  const [imgSm, setImgSm] = useState(mov.imgSm);
+  const [imgTitle, setImgTitle] = useState(mov.imgTitle);
+
+  const [update_img, setUpdateImg] = useState(null);
+
+  const [episode, setEpisode] = useState(mov.episode);
+  const [season, setSeason] = useState(mov.season);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
   const [uploadedFile2, setUploadedFile2] = useState({});
-  const [uploadedFile3, setUploadedFile3] = useState({});
-  const [uploadedFile4, setUploadedFile4] = useState({});
   const [message, setMessage] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [uploadPercentage3, setUploadPercentage3] = useState(0);
-  const [uploadPercentage4, setUploadPercentage4] = useState(0);
   const [uploadPercentage1, setUploadPercentage1] = useState(0);
   const [uploadPercentage2, setUploadPercentage2] = useState(0);
 
-  const { isFetching, error, dispatch } = useContext(MovieContext);
-
-  //const [thumbnail, setThumbnail] = useState("");
-  const [title_pic, setTitlePic] = useState("Upload Title Image");
-  const [small_pic, setSmallPic] = useState("Upload Small Image");
-  const [cover_pic, setCoverPic] = useState("Upload Cover Image");
-  const [videos, setVideos] = useState("Upload video (mp4)");
-  const [trailers, setTrailers] = useState("Upload trailer (mp4)");
-  const [audio, setAudio] = useState("Upload audio");
+  useEffect(() => {
+    setId(mov._id);
+    setTitle(mov.title);
+    setDesc(mov.desc);
+    setYear(mov.year);
+    setTime(mov.time);
+    setGenre(mov.genre);
+    setAge(mov.age);
+    setCast(mov.cast);
+    setDirector(mov.director);
+    setWriter(mov.writer);
+    setType(mov.type);
+    setImg(mov.img);
+    setImgSm(mov.imgSm);
+    setImgTitle(mov.imgTitle);
+    // if (type === "Series") {
+    setEpisode(mov.episode);
+    setSeason(mov.season);
+    // } else {
+    //   setEpisode(null);
+    //   setSeason(null);
+    // }
+  }, [mov]);
 
   useEffect(() => {
-    setTime(null);
+    // setTime(null);
     setSeason(null);
     setEpisode(null);
-    if (type === "Music") {
-      setTrailer(null);
-      setTrailers("Upload trailer (mp4)");
-    }
   }, [type]);
 
-  const selectCoverImage = (e) => {
-    //setThumbnail(e.target.files[0].name);
-    setCoverPic(e.target.files[0].name);
+  //   useEffect(() => {
+  //     setUploadedFile(uploadedFile);
+  //   }, [uploadedFile]);
+
+  const { isFetching, error, dispatch } = useContext(MovieContext);
+
+  const navigate = useNavigate();
+
+  const [thumbnail, setThumbnail] = useState("Upload Cover Image");
+  const [title_pic, setTitlePic] = useState("Upload Title Image");
+  const [small_pic, setSmallPic] = useState("Upload Small Image");
+
+  const selectCoverImage = async (e) => {
+    setThumbnail(e.target.files[0].name);
     setImg(e.target.files[0]);
+    //setUpdateImg(e.target.files[0]);
 
-    //console.log(thumbnail);
-  };
-
-  const changeTitlePic = (e) => {
-    setTitlePic(e.target.files[0].name);
-    setImgTitle(e.target.files[0]);
-
-    //console.log(title_pic);
-  };
-
-  const changeSmallPic = (e) => {
-    setSmallPic(e.target.files[0].name);
-    setImgSm(e.target.files[0]);
-  };
-
-  const changeVideo = (e) => {
-    setVideos(e.target.files[0].name);
-    setAudio(e.target.files[0].name);
-    setVideo(e.target.files[0]);
-  };
-
-  const changeTrailer = (e) => {
-    setTrailers(e.target.files[0].name);
-    setTrailer(e.target.files[0]);
-  };
-
-  const uploadMovie = async () => {
-    // e.preventDefault();
-    //cover image
-    if (
-      !img ||
-      !imgSm ||
-      !imgTitle ||
-      !video ||
-      (type !== "Music" && !trailer)
-    ) {
-      toast.error("Please select all images, video and trailer");
+    if (!img) {
+      toast.error("Please select a cover image");
     } else {
       const formData = new FormData();
-      formData.append("img", img);
-      formData.append("imgSm", imgSm);
-      formData.append("imgTitle", imgTitle);
-      formData.append("video", video);
-      if (type !== "Music") {
-        formData.append("trailer", trailer);
-      }
+      formData.append("img", e.target.files[0]);
 
       try {
-        const res = await axios.post("/upload", formData, {
+        const res = await axios.post("/uploadfiles", formData, {
           headers: {
             token:
               "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
@@ -126,6 +110,8 @@ const AddItem = () => {
             );
           },
         });
+
+        //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
@@ -144,13 +130,26 @@ const AddItem = () => {
         if (err.response.status === 500) {
           toast.error("There was a problem with the server");
         } else {
-          toast.error(err.response.data.msg);
+          console.log(err.response.data.msg);
         }
         setUploadPercentage(0);
       }
+    }
+    //console.log(uploadedFile.filePath);
+  };
+
+  const selectSmallImage = async (e) => {
+    setSmallPic(e.target.files[0].name);
+    setImgSm(e.target.files[0]);
+
+    if (!imgSm) {
+      toast.error("Please select a small image");
+    } else {
+      const formData = new FormData();
+      formData.append("imgSm", e.target.files[0]);
 
       try {
-        const res = await axios.post("/upload1", formData, {
+        const res = await axios.post("/uploadfiles1", formData, {
           headers: {
             token:
               "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
@@ -164,6 +163,8 @@ const AddItem = () => {
             );
           },
         });
+
+        //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
@@ -182,13 +183,27 @@ const AddItem = () => {
         if (err.response.status === 500) {
           toast.error("There was a problem with the server");
         } else {
-          toast.error(err.response.data.msg);
+          console.log(err.response.data.msg);
         }
         setUploadPercentage1(0);
       }
+    }
+
+    //console.log(title_pic);
+  };
+
+  const selectTitleImage = async (e) => {
+    setTitlePic(e.target.files[0].name);
+    setImgTitle(e.target.files[0]);
+
+    if (!imgTitle) {
+      toast.error("Please select a title image");
+    } else {
+      const formData = new FormData();
+      formData.append("imgTitle", e.target.files[0]);
 
       try {
-        const res = await axios.post("/upload2", formData, {
+        const res = await axios.post("/uploadfiles2", formData, {
           headers: {
             token:
               "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
@@ -202,6 +217,8 @@ const AddItem = () => {
             );
           },
         });
+
+        //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
@@ -220,169 +237,137 @@ const AddItem = () => {
         if (err.response.status === 500) {
           toast.error("There was a problem with the server");
         } else {
-          toast.error(err.response.data.msg);
+          console.log(err.response.data.msg);
         }
         setUploadPercentage2(0);
-      }
-
-      try {
-        const res = await axios.post("/upload3", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage3(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile3({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-        if (type === "Music") {
-          toast.success("You can publish now");
-        }
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage3(0);
-      }
-
-      if (type !== "Music") {
-        try {
-          const res = await axios.post("/upload4", formData, {
-            headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (progressEvent) => {
-              setUploadPercentage4(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
-              );
-            },
-          });
-
-          // Clear percentage
-          //setTimeout(() => setUploadPercentage(0), 10000);
-
-          const { fileName, filePath } = res.data;
-
-          setUploadedFile4({
-            fileName,
-            filePath,
-          });
-
-          //console.log(uploadedFile);
-
-          setMessage("File Uploaded");
-          toast.success("You can publish now");
-        } catch (err) {
-          if (err.response.status === 500) {
-            toast.error("There was a problem with the server");
-          } else {
-            toast.error(err.response.data.msg);
-          }
-          setUploadPercentage4(0);
-        }
       }
     }
+
+    //console.log(title_pic);
   };
 
-  const addMovie = () => {
-    if (
-      !title ||
-      !desc ||
-      !year ||
-      !time ||
-      !genre ||
-      (type !== "Music" && !age) ||
-      !cast ||
-      !director ||
-      !writer ||
-      !type ||
-      !img ||
-      !imgTitle ||
-      !imgSm ||
-      (type !== "Music" && !trailer) ||
-      !video
-    ) {
-      toast.error("Please fill up all the empty fields");
+  const update = () => {
+    // if (!imgSm) {
+    //   toast.error("Please select a small image");
+    // } else {
+    //   const formData = new FormData();
+    //   formData.append("imgSm", imgSm);
+
+    //   try {
+    //     const res = await axios.post("/uploadfiles1", formData, {
+    //       headers: {
+    //         token:
+    //           "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //       onUploadProgress: (progressEvent) => {
+    //         setUploadPercentage1(
+    //           parseInt(
+    //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+    //           )
+    //         );
+    //       },
+    //     });
+
+    //     // Clear percentage
+    //     //setTimeout(() => setUploadPercentage(0), 10000);
+
+    //     const { fileName, filePath } = res.data;
+
+    //     setUploadedFile1({
+    //       fileName,
+    //       filePath,
+    //     });
+
+    //     //console.log(uploadedFile);
+
+    //     setMessage("File Uploaded");
+    //   } catch (err) {
+    //     if (err.response.status === 500) {
+    //       toast.error("There was a problem with the server");
+    //     } else {
+    //       console.log(err.response.data.msg);
+    //     }
+    //     setUploadPercentage1(0);
+    //   }
+    // }
+
+    // if (!imgTitle) {
+    //   toast.error("Please select a title image");
+    // } else {
+    //   const formData = new FormData();
+    //   formData.append("imgTitle", imgTitle);
+
+    //   try {
+    //     const res = await axios.post("/uploadfiles2", formData, {
+    //       headers: {
+    //         token:
+    //           "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //       onUploadProgress: (progressEvent) => {
+    //         setUploadPercentage2(
+    //           parseInt(
+    //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+    //           )
+    //         );
+    //       },
+    //     });
+
+    //     // Clear percentage
+    //     //setTimeout(() => setUploadPercentage(0), 10000);
+
+    //     const { fileName, filePath } = res.data;
+
+    //     setUploadedFile2({
+    //       fileName,
+    //       filePath,
+    //     });
+
+    //     //console.log(uploadedFile);
+
+    //     setMessage("File Uploaded");
+    //   } catch (err) {
+    //     if (err.response.status === 500) {
+    //       toast.error("There was a problem with the server");
+    //     } else {
+    //       console.log(err.response.data.msg);
+    //     }
+    //     setUploadPercentage2(0);
+    //   }
+    // }
+
+    updateMovie(
+      {
+        title,
+        desc,
+        year,
+        time,
+        genre,
+        age,
+        cast,
+        director,
+        writer,
+        type,
+        episode,
+        season,
+        img: uploadedFile.filePath,
+        imgSm: uploadedFile1.filePath,
+        imgTitle: uploadedFile2.filePath,
+      },
+      id,
+      dispatch
+    );
+
+    console.log(uploadedFile.filePath);
+
+    if (!error) {
+      toast.success("Updated Successfully");
+      setTimeout(() => {
+        navigate("/catalog");
+      }, 2000);
     } else {
-      createMovie(
-        {
-          title,
-          desc,
-          year,
-          time,
-          genre,
-          age,
-          cast,
-          director,
-          writer,
-          type,
-          episode,
-          season,
-          img: uploadedFile.filePath,
-          imgTitle: uploadedFile2.filePath,
-          imgSm: uploadedFile1.filePath,
-          video: uploadedFile3.filePath,
-          trailer: uploadedFile4.filePath,
-        },
-        dispatch
-      );
-      if (!error) {
-        toast.success("Uploaded Successfully");
-        setTitle(null);
-        setDesc(null);
-        setYear(null);
-        setTime(null);
-        setGenre(null);
-        setAge(null);
-        setCast(null);
-        setDirector(null);
-        setWriter(null);
-        setEpisode(null);
-        setSeason(null);
-        setCoverPic("Upload cover image");
-        setSmallPic("Upload small image");
-        setTitlePic("Upload title image");
-        setVideos("Upload video (mp4)");
-        setTrailers("Upload trailers (mp4)");
-        setImg(null);
-        setImgSm(null);
-        setImgTitle(null);
-        setVideo(null);
-        setTrailer(null);
-        setUploadPercentage(0);
-        setUploadPercentage1(0);
-        setUploadPercentage2(0);
-        setUploadPercentage3(0);
-        setUploadPercentage4(0);
-      } else {
-        toast.error("This title is created before");
-      }
+      toast.error("Something went wrong. Try again.");
     }
   };
   return (
@@ -395,7 +380,7 @@ const AddItem = () => {
             {/* <!-- main title --> */}
             <div className="col-12">
               <div className="main__title">
-                <h2>Add new content</h2>
+                <h2>Edit {mov.title}</h2>
               </div>
             </div>
             {/* <!-- end main title --> */}
@@ -404,52 +389,11 @@ const AddItem = () => {
             <div className="col-12">
               <form action="#" className="form">
                 <div className="row">
-                  <div className="col-12">
-                    <ul className="form__radio">
-                      <li>
-                        <span>Item type:</span>
-                      </li>
-                      <li>
-                        <input
-                          id="type1"
-                          type="radio"
-                          name="type"
-                          value="Movie"
-                          onChange={(e) => setType(e.target.value)}
-                          // checked={type === "Series"}
-                        />
-                        <label for="type1">Movie</label>
-                      </li>
-                      <li>
-                        <input
-                          id="type2"
-                          type="radio"
-                          name="type"
-                          value="Series"
-                          onChange={(e) => setType(e.target.value)}
-                          // checked={type === "Series"}
-                        />
-                        <label for="type2">Series</label>
-                      </li>
-                      <li>
-                        <input
-                          id="type3"
-                          type="radio"
-                          name="type"
-                          value="Music"
-                          onChange={(e) => setType(e.target.value)}
-                          // checked={type === "Series"}
-                        />
-                        <label for="type3">Music</label>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="col-12 col-md-5 form__cover">
+                  <div className="col-12 col-md-6 ">
                     <div className="row">
                       <div className="col-12 col-sm-6 col-md-12">
                         <div className="form__img">
-                          <label for="form__img-upload">{cover_pic}</label>
+                          <label htmlFor="form__img-upload">{thumbnail}</label>
                           <input
                             id="form__img-upload"
                             name="form__img-upload"
@@ -457,20 +401,58 @@ const AddItem = () => {
                             accept=".png, .jpg, .jpeg"
                             onChange={(e) => selectCoverImage(e)}
                           />
-                          <img id="form__img" src={cover_pic} alt=" " />
-                        </div>
-                      </div>
-                    </div>
-                    {uploadPercentage > 0 && (
-                      <div className="col-12 col-lg-12">
-                        <div className="">
-                          <ProgressBar
-                            now={uploadPercentage}
-                            label={`cover(${uploadPercentage}%)`}
+                          <img
+                            id="form__img"
+                            src={AppUrl.base_url + img}
+                            alt=" "
                           />
                         </div>
                       </div>
-                    )}
+                    </div>
+                  </div>
+
+                  <div className="col-12 col-md-6">
+                    <div className="row">
+                      <div className="col-12 col-sm-6 col-md-12">
+                        <div className="form__img">
+                          <label htmlFor="form__img-upload1">{small_pic}</label>
+                          <input
+                            id="form__img-upload1"
+                            name="form__img-upload1"
+                            type="file"
+                            accept=".png, .jpg, .jpeg"
+                            onChange={(e) => selectSmallImage(e)}
+                          />
+                          <img
+                            id="form__img"
+                            src={AppUrl.base_url + imgSm}
+                            alt=" "
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-12 col-md-5 form__cover">
+                    <div className="row">
+                      <div className="col-12 col-sm-6 col-md-12">
+                        <div className="form__img">
+                          <label htmlFor="form__img-upload2">{title_pic}</label>
+                          <input
+                            id="form__img-upload2"
+                            name="form__img-upload2"
+                            type="file"
+                            accept=".png, .jpg, .jpeg"
+                            onChange={(e) => selectTitleImage(e)}
+                          />
+                          <img
+                            id="form__img"
+                            src={AppUrl.base_url + imgTitle}
+                            alt=" "
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="col-12 col-md-7 form__content">
@@ -481,12 +463,13 @@ const AddItem = () => {
                             type="text"
                             className="form__input"
                             placeholder="Title"
+                            value={title}
                             onChange={(e) => setTitle(e.target.value)}
                           />
                         </div>
                       </div>
 
-                      {type === "Series" ? (
+                      {type === "Series" && (
                         <>
                           <div className="col-12 col-sm-6 col-lg-6">
                             <div className="form__group">
@@ -512,8 +495,6 @@ const AddItem = () => {
                             </div>
                           </div>
                         </>
-                      ) : (
-                        <></>
                       )}
 
                       <div className="col-12">
@@ -547,11 +528,7 @@ const AddItem = () => {
                             type="text"
                             className="form__input"
                             placeholder={
-                              type === "Movie"
-                                ? "Duration"
-                                : type === "Series"
-                                ? "Total Season"
-                                : "Duration/total season"
+                              type === "Series" ? "Total Season" : "Duration"
                             }
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
@@ -946,7 +923,7 @@ const AddItem = () => {
                         </div>
                       </div> */}
 
-                      <div className="col-12 col-lg-6">
+                      {/* <div className="col-12">
                         <div className="form__gallery">
                           <label id="gallery1" for="form__gallery-upload">
                             {title_pic}
@@ -962,50 +939,11 @@ const AddItem = () => {
                             onChange={(e) => changeTitlePic(e)}
                           />
                         </div>
-                      </div>
-
-                      <div className="col-12 col-lg-6">
-                        <div className="form__gallery">
-                          <label id="gallery1" for="form__gallery-upload2">
-                            {small_pic}
-                          </label>
-                          <input
-                            data-name="#gallery1"
-                            id="form__gallery-upload2"
-                            name="gallery"
-                            className="form__gallery-upload"
-                            type="file"
-                            accept=".png, .jpg, .jpeg"
-                            multiple
-                            onChange={(e) => changeSmallPic(e)}
-                          />
-                        </div>
-                      </div>
-                      {uploadPercentage1 > 0 && (
-                        <div className="col-12 col-lg-6">
-                          <div className="">
-                            <ProgressBar
-                              now={uploadPercentage1}
-                              label={`title(${uploadPercentage1}%)`}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {uploadPercentage2 > 0 && (
-                        <div className="col-12 col-lg-6">
-                          <div className="">
-                            <ProgressBar
-                              now={uploadPercentage2}
-                              label={`small(${uploadPercentage2}%)`}
-                            />
-                          </div>
-                        </div>
-                      )}
+                      </div> */}
                     </div>
                   </div>
 
-                  {/* <div className="col-12">
+                  <div className="col-12">
                     <ul className="form__radio">
                       <li>
                         <span>Item type:</span>
@@ -1017,7 +955,7 @@ const AddItem = () => {
                           name="type"
                           value="Movie"
                           onChange={(e) => setType(e.target.value)}
-                          // checked={type === "Series"}
+                          checked={type === "Movie"}
                         />
                         <label for="type1">Movie</label>
                       </li>
@@ -1028,52 +966,43 @@ const AddItem = () => {
                           name="type"
                           value="Series"
                           onChange={(e) => setType(e.target.value)}
-                          // checked={type === "Series"}
+                          checked={type === "Series"}
                         />
-                        <label for="type2">TV Show</label>
+                        <label for="type2">Series</label>
+                      </li>
+                      <li>
+                        <input
+                          id="type3"
+                          type="radio"
+                          name="type3"
+                          value="Music"
+                          onChange={(e) => setType(e.target.value)}
+                          checked={type === "Music"}
+                        />
+                        <label for="type3">Music</label>
                       </li>
                     </ul>
-                  </div> */}
+                  </div>
 
                   <div className="col-12">
                     <div className="row">
-                      {type !== "Music" ? (
-                        <>
-                          <div className="col-12 col-lg-6">
-                            <div className="form__video">
-                              <label id="movie1" for="form__video-upload">
-                                {videos}
-                              </label>
-                              <input
-                                data-name="#movie1"
-                                id="form__video-upload"
-                                name="movie"
-                                className="form__video-upload"
-                                type="file"
-                                accept="video/mp4,video/x-m4v,video/*,.mkv"
-                                onChange={(e) => changeVideo(e)}
-                              />
-                            </div>
-                          </div>
+                      {/* <div className="col-12 col-lg-6">
+                        <div className="form__video">
+                          <label id="movie1" for="form__video-upload">
+                            Upload video (mp4)
+                          </label>
+                          <input
+                            data-name="#movie1"
+                            id="form__video-upload"
+                            name="movie"
+                            className="form__video-upload"
+                            type="file"
+                            accept="video/mp4,video/x-m4v,video/*"
+                          />
+                        </div>
+                      </div> */}
 
-                          <div className="col-12 col-lg-6">
-                            <div className="form__video">
-                              <label id="movie2" for="form__video-upload1">
-                                {trailers}
-                              </label>
-                              <input
-                                data-name="#movie2"
-                                id="form__video-upload1"
-                                name="trailer"
-                                className="form__video-upload"
-                                type="file"
-                                accept="video/mp4,video/x-m4v,video/*, .mkv"
-                                onChange={(e) => changeTrailer(e)}
-                              />
-                            </div>
-                          </div>
-
-                          {/* <div className="col-12 col-lg-6">
+                      {/* <div className="col-12 col-lg-6">
                         <div className="form__group form__group--link">
                           <input
                             type="text"
@@ -1082,113 +1011,27 @@ const AddItem = () => {
                           />
                         </div>
                       </div> */}
-                          {uploadPercentage3 > 0 && (
-                            <div className="col-12 col-lg-6">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage3}
-                                  label={`video(${uploadPercentage3}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {uploadPercentage4 > 0 && (
-                            <div className="col-12 col-lg-6">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage4}
-                                  label={`trailer(${uploadPercentage4}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <div className="col-12 col-lg-12">
-                            <div className="form__video">
-                              <label id="music" for="form__video-upload3">
-                                {audio}
-                              </label>
-                              <input
-                                data-name="#music"
-                                id="form__video-upload3"
-                                name="music"
-                                className="form__video-upload"
-                                type="file"
-                                accept="audio/*"
-                                onChange={(e) => changeVideo(e)}
-                              />
-                            </div>
-                          </div>
-
-                          {uploadPercentage3 > 0 && (
-                            <div className="col-12 col-lg-12">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage3}
-                                  label={`audio(${uploadPercentage3}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
 
                       <div className="col-12">
-                        {uploadPercentage +
-                          uploadPercentage1 +
-                          uploadPercentage2 +
-                          uploadPercentage3 +
-                          uploadPercentage4 ===
-                        (type === "Music" ? 400 : 500) ? (
+                        {isFetching ? (
                           <>
-                            {isFetching ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  disabled={true}
-                                >
-                                  publishing...
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  onClick={() => addMovie()}
-                                >
-                                  publish
-                                </button>
-                              </>
-                            )}
+                            <button
+                              type="button"
+                              className="form__btn"
+                              disabled={true}
+                            >
+                              Updating...
+                            </button>
                           </>
                         ) : (
                           <>
-                            {uploadPercentage > 0 && uploadPercentage < 500 ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  disabled={true}
-                                >
-                                  uploading...
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  onClick={() => uploadMovie()}
-                                >
-                                  upload
-                                </button>
-                              </>
-                            )}
+                            <button
+                              type="button"
+                              className="form__btn"
+                              onClick={() => update()}
+                            >
+                              Update
+                            </button>
                           </>
                         )}
                       </div>
@@ -1206,4 +1049,4 @@ const AddItem = () => {
   );
 };
 
-export default AddItem;
+export default CatalogEdit;

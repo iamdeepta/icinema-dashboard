@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./css/sidebar.scss";
 import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../context/authContext/AuthActions";
+import { AuthContext } from "../context/authContext/AuthContext";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
 
   const signout = () => {
-    navigate("/signout");
+    // navigate("/signout");
+    dispatch(logout());
   };
   return (
     <>
@@ -30,7 +34,11 @@ const Sidebar = () => {
             <p>iCinema</p>
           </div>
 
-          <button className="sidebar__user-btn" type="button" onClick={signout}>
+          <button
+            className="sidebar__user-btn"
+            type="button"
+            onClick={() => signout()}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M4,12a1,1,0,0,0,1,1h7.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,.21-.33,1,1,0,0,0,0-.76,1,1,0,0,0-.21-.33l-4-4a1,1,0,1,0-1.42,1.42L12.59,11H5A1,1,0,0,0,4,12ZM17,2H7A3,3,0,0,0,4,5V8A1,1,0,0,0,6,8V5A1,1,0,0,1,7,4H17a1,1,0,0,1,1,1V19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V16a1,1,0,0,0-2,0v3a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V5A3,3,0,0,0,17,2Z" />
             </svg>
@@ -57,7 +65,7 @@ const Sidebar = () => {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M10,13H3a1,1,0,0,0-1,1v7a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V14A1,1,0,0,0,10,13ZM9,20H4V15H9ZM21,2H14a1,1,0,0,0-1,1v7a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V3A1,1,0,0,0,21,2ZM20,9H15V4h5Zm1,4H14a1,1,0,0,0-1,1v7a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V14A1,1,0,0,0,21,13Zm-1,7H15V15h5ZM10,2H3A1,1,0,0,0,2,3v7a1,1,0,0,0,1,1h7a1,1,0,0,0,1-1V3A1,1,0,0,0,10,2ZM9,9H4V4H9Z" />
               </svg>{" "}
-              <span>Catalog</span>
+              <span>Contents</span>
             </Link>
           </li>
 
@@ -130,14 +138,14 @@ const Sidebar = () => {
             </Link>
           </li> */}
 
-          <li className="sidebar__nav-item">
+          {/* <li className="sidebar__nav-item">
             <Link to="/reviews" className="sidebar__nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
               </svg>{" "}
               <span>Reviews</span>
             </Link>
-          </li>
+          </li> */}
           {/* <li className="sidebar__nav-item">
             <a
               href="https://dmitryvolkov.me/demo/flixtv/main/index.html"

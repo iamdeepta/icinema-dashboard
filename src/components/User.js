@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+//import { Link } from "react-router-dom";
+import { getUsers } from "../context/userContext/apiCalls";
+import { UserContext } from "../context/userContext/UserContext";
+import UserModals from "./UserModals";
+import "./css/catalog_content.scss";
+//import AppUrl from "../classes/AppUrl";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const User = () => {
+  const [selectedId, setSelectedId] = useState(null);
+
+  //const handleClose = () => setSelectedId(null);
+  const handleShow = (e, id) => {
+    e.preventDefault();
+
+    setSelectedId(id);
+  };
+
+  const { users, error, dispatch } = useContext(UserContext);
+
+  useEffect(() => {
+    getUsers(dispatch);
+  }, [dispatch]);
+
   return (
     <>
+      <ToastContainer />
       {/* <!-- main content --> */}
       <main className="main">
         <div className="container-fluid">
@@ -12,11 +36,11 @@ const User = () => {
               <div className="main__title">
                 <h2>Users</h2>
 
-                <span className="main__title-stat">3 702 total</span>
+                <span className="main__title-stat">{users.length} total</span>
 
                 <div className="main__title-wrap">
                   {/* <!-- filter sort --> */}
-                  <div className="filter" id="filter__sort">
+                  {/* <div className="filter" id="filter__sort">
                     <span className="filter__item-label">Sort by:</span>
 
                     <div
@@ -39,7 +63,7 @@ const User = () => {
                       <li>Pricing plan</li>
                       <li>Status</li>
                     </ul>
-                  </div>
+                  </div> */}
                   {/* <!-- end filter sort --> */}
 
                   {/* <!-- search --> */}
@@ -84,57 +108,70 @@ const User = () => {
                 <table className="main__table">
                   <thead>
                     <tr>
-                      <th>ID</th>
+                      <th>#</th>
                       <th>BASIC INFO</th>
-                      <th>USERNAME</th>
+                      {/* <th>USERNAME</th> */}
                       <th>PRICING PLAN</th>
-                      <th>COMMENTS</th>
-                      <th>REVIEWS</th>
+                      {/* <th>COMMENTS</th>
+                      <th>REVIEWS</th> */}
                       <th>STATUS</th>
-                      <th>CRAETED DATE</th>
+                      <th>SIGNUP DATE</th>
                       <th>ACTIONS</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="main__table-text">23</div>
-                      </td>
-                      <td>
-                        <div className="main__user">
-                          <div className="main__avatar">
-                            <img src="images/user.svg" alt="" />
-                          </div>
-                          <div className="main__meta">
-                            <h3>John Doe</h3>
-                            <span>email@email.com</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
+                    {users
+                      .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+                      .map((item, index) => (
+                        <tr key={item._id}>
+                          <td>
+                            <div className="main__table-text">{index + 1}</div>
+                          </td>
+                          <td>
+                            <div className="main__user">
+                              <div className="main__avatar">
+                                <img src="images/user.svg" alt="" />
+                              </div>
+                              <div className="main__meta">
+                                <h3>{item.username}</h3>
+                                <span>{item.email}</span>
+                              </div>
+                            </div>
+                          </td>
+                          {/* <td>
                         <div className="main__table-text">Username</div>
-                      </td>
-                      <td>
-                        <div className="main__table-text">Premium</div>
-                      </td>
-                      <td>
+                      </td> */}
+                          <td>
+                            <div className="main__table-text">
+                              {item.pricingPlan}
+                            </div>
+                          </td>
+                          {/* <td>
                         <div className="main__table-text">13</div>
                       </td>
                       <td>
                         <div className="main__table-text">1</div>
-                      </td>
-                      <td>
-                        <div className="main__table-text main__table-text--green">
-                          Approved
-                        </div>
-                      </td>
-                      <td>
-                        <div className="main__table-text">24 Oct 2021</div>
-                      </td>
-                      <td>
-                        <div className="main__table-btns">
-                          <a
+                      </td> */}
+                          <td>
+                            <div
+                              className={
+                                item.isAdmin
+                                  ? "main__table-text main__table-text--green"
+                                  : "main__table-text main__table-text--red"
+                              }
+                            >
+                              {item.isAdmin ? "Admin" : "User"}
+                            </div>
+                          </td>
+                          <td>
+                            <div className="main__table-text">
+                              {item.createdAt.substr(0, 10)}
+                            </div>
+                          </td>
+                          <td>
+                            <div className="main__table-btns">
+                              {/* <a
                             href="#modal-status"
                             className="main__table-btn main__table-btn--banned open-modal"
                           >
@@ -144,8 +181,8 @@ const User = () => {
                             >
                               <path d="M12,13a1.49,1.49,0,0,0-1,2.61V17a1,1,0,0,0,2,0V15.61A1.49,1.49,0,0,0,12,13Zm5-4V7A5,5,0,0,0,7,7V9a3,3,0,0,0-3,3v7a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V12A3,3,0,0,0,17,9ZM9,7a3,3,0,0,1,6,0V9H9Zm9,12a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V12a1,1,0,0,1,1-1H17a1,1,0,0,1,1,1Z" />
                             </svg>
-                          </a>
-                          <a
+                          </a> */}
+                              {/* <a
                             href="edit-user.html"
                             className="main__table-btn main__table-btn--edit"
                           >
@@ -155,22 +192,25 @@ const User = () => {
                             >
                               <path d="M22,7.24a1,1,0,0,0-.29-.71L17.47,2.29A1,1,0,0,0,16.76,2a1,1,0,0,0-.71.29L13.22,5.12h0L2.29,16.05a1,1,0,0,0-.29.71V21a1,1,0,0,0,1,1H7.24A1,1,0,0,0,8,21.71L18.87,10.78h0L21.71,8a1.19,1.19,0,0,0,.22-.33,1,1,0,0,0,0-.24.7.7,0,0,0,0-.14ZM6.83,20H4V17.17l9.93-9.93,2.83,2.83ZM18.17,8.66,15.34,5.83l1.42-1.41,2.82,2.82Z" />
                             </svg>
-                          </a>
-                          <a
-                            href="#modal-delete"
-                            className="main__table-btn main__table-btn--delete open-modal"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18ZM20,6H16V5a3,3,0,0,0-3-3H11A3,3,0,0,0,8,5V6H4A1,1,0,0,0,4,8H5V19a3,3,0,0,0,3,3h8a3,3,0,0,0,3-3V8h1a1,1,0,0,0,0-2ZM10,5a1,1,0,0,1,1-1h2a1,1,0,0,1,1,1V6H10Zm7,14a1,1,0,0,1-1,1H8a1,1,0,0,1-1-1V8H17Zm-3-1a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
+                          </a> */}
+                              <a
+                                href="!#"
+                                className="main__table-btn main__table-btn--delete open-modal"
+                                onClick={(e) => handleShow(e, item._id)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18ZM20,6H16V5a3,3,0,0,0-3-3H11A3,3,0,0,0,8,5V6H4A1,1,0,0,0,4,8H5V19a3,3,0,0,0,3,3h8a3,3,0,0,0,3-3V8h1a1,1,0,0,0,0-2ZM10,5a1,1,0,0,1,1-1h2a1,1,0,0,1,1,1V6H10Zm7,14a1,1,0,0,1-1,1H8a1,1,0,0,1-1-1V8H17Zm-3-1a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z" />
+                                </svg>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+
+                    {/* <tr>
                       <td>
                         <div className="main__table-text">24</div>
                       </td>
@@ -826,7 +866,7 @@ const User = () => {
                           </a>
                         </div>
                       </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>
@@ -834,7 +874,7 @@ const User = () => {
             {/* <!-- end users --> */}
 
             {/* <!-- paginator --> */}
-            <div className="col-12">
+            {/* <div className="col-12">
               <div className="paginator">
                 <span className="paginator__pages">10 from 3 702</span>
 
@@ -901,15 +941,24 @@ const User = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
             {/* <!-- end paginator --> */}
           </div>
         </div>
       </main>
       {/* <!-- end main content --> */}
 
+      {selectedId && (
+        <UserModals
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+          error={error}
+          dispatch={dispatch}
+        />
+      )}
+
       {/* <!-- modal status --> */}
-      <div id="modal-status" class="zoom-anim-dialog mfp-hide modal">
+      {/* <div id="modal-status" class="zoom-anim-dialog mfp-hide modal">
         <h6 class="modal__title">Status change</h6>
 
         <p class="modal__text">Are you sure about immediately change status?</p>
@@ -922,11 +971,11 @@ const User = () => {
             Dismiss
           </button>
         </div>
-      </div>
+      </div> */}
       {/* <!-- end modal status --> */}
 
       {/* <!-- modal delete --> */}
-      <div id="modal-delete" className="zoom-anim-dialog mfp-hide modal">
+      {/* <div id="modal-delete" className="zoom-anim-dialog mfp-hide modal">
         <h6 className="modal__title">User delete</h6>
 
         <p className="modal__text">
@@ -941,7 +990,7 @@ const User = () => {
             Dismiss
           </button>
         </div>
-      </div>
+      </div> */}
       {/* <!-- end modal delete --> */}
     </>
   );
