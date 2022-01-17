@@ -380,6 +380,7 @@ const AddItem = () => {
         setUploadPercentage2(0);
         setUploadPercentage3(0);
         setUploadPercentage4(0);
+        window.location.reload();
       } else {
         toast.error("This title is created before");
       }

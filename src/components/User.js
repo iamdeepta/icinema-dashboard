@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 const User = () => {
   const [selectedId, setSelectedId] = useState(null);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   //const handleClose = () => setSelectedId(null);
   const handleShow = (e, id) => {
     e.preventDefault();
@@ -68,7 +70,11 @@ const User = () => {
 
                   {/* <!-- search --> */}
                   <form action="#" className="main__title-form">
-                    <input type="text" placeholder="Find user.." />
+                    <input
+                      type="text"
+                      placeholder="Find user.."
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                     <button type="button">
                       <svg
                         width="18"
@@ -123,6 +129,35 @@ const User = () => {
                   <tbody>
                     {users
                       .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+                      .filter((u) => {
+                        if (searchTerm === "") {
+                          return u;
+                        } else if (
+                          u.username
+                            .toLowerCase()
+                            .includes(searchTerm.toLocaleLowerCase())
+                        ) {
+                          return u;
+                        } else if (
+                          u.pricingPlan
+                            .toLowerCase()
+                            .includes(searchTerm.toLocaleLowerCase())
+                        ) {
+                          return u;
+                        } else if (
+                          u.createdAt
+                            .toLowerCase()
+                            .includes(searchTerm.toLocaleLowerCase())
+                        ) {
+                          return u;
+                        } else if (
+                          u.email
+                            .toLowerCase()
+                            .includes(searchTerm.toLocaleLowerCase())
+                        ) {
+                          return u;
+                        }
+                      })
                       .map((item, index) => (
                         <tr key={item._id}>
                           <td>
