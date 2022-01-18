@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/authContext/AuthContext";
 import { MovieContextProvider } from "./context/movieContext/MovieContext";
 import { UserContextProvider } from "./context/userContext/UserContext";
+import { ListContextProvider } from "./context/listContext/ListContext";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,7 +15,9 @@ ReactDOM.render(
       <AuthContextProvider>
         <MovieContextProvider>
           <UserContextProvider>
-            <App />
+            <ListContextProvider>
+              <App />
+            </ListContextProvider>
           </UserContextProvider>
         </MovieContextProvider>
       </AuthContextProvider>

@@ -13,6 +13,9 @@ const Items = lazy(() => import("./pages/items/Items"));
 const Users = lazy(() => import("./pages/users/Users"));
 const Reviews = lazy(() => import("./pages/reviews/Reviews"));
 const CatalogEdit = lazy(() => import("./pages/catalog/CatalogEdits"));
+const AddCategory = lazy(() => import("./pages/addCategory/AddCategories"));
+const Category = lazy(() => import("./pages/category/Category"));
+const CategoryEdit = lazy(() => import("./pages/category/CategoryEdits"));
 const SignOut = lazy(() => import("./pages/signout/SignOut"));
 
 const App = () => {
@@ -47,6 +50,16 @@ const App = () => {
           />
           <Route
             exact
+            path="/add-category"
+            element={user ? <AddCategory /> : <Navigate to="/signout" />}
+          />
+          <Route
+            exact
+            path="/category"
+            element={user ? <Category /> : <Navigate to="/signout" />}
+          />
+          <Route
+            exact
             path="/users"
             element={user ? <Users /> : <Navigate to="/signout" />}
           />
@@ -60,6 +73,11 @@ const App = () => {
             exact
             path="/edit-catalog/:id"
             element={user ? <CatalogEdit /> : <Navigate to="/signout" />}
+          />
+          <Route
+            exact
+            path="/edit-category/:id"
+            element={user ? <CategoryEdit /> : <Navigate to="/signout" />}
           />
           {/* </>
           )} */}

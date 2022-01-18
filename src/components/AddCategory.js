@@ -7,402 +7,39 @@ import { MovieContext } from "../context/movieContext/MovieContext";
 import axios from "axios";
 import { ProgressBar } from "react-bootstrap";
 import "./css/add_item.scss";
-import Select from "react-select";
 import { ListContext } from "../context/listContext/ListContext";
-import { getLists } from "../context/listContext/apiCalls";
+import { createList } from "../context/listContext/apiCalls";
 
-const AddItem = () => {
+const AddCategory = () => {
   const [title, setTitle] = useState(null);
-  const [desc, setDesc] = useState(null);
-  const [year, setYear] = useState(null);
-  const [time, setTime] = useState(null);
-  const [genre, setGenre] = useState(null);
-  const [age, setAge] = useState(null);
-  const [cast, setCast] = useState(null);
-  const [director, setDirector] = useState(null);
-  const [writer, setWriter] = useState(null);
+
   const [type, setType] = useState(null);
-  const [category, setCategory] = useState(null);
-  const [img, setImg] = useState(null);
-  const [imgTitle, setImgTitle] = useState(null);
-  const [imgSm, setImgSm] = useState(null);
-  const [trailer, setTrailer] = useState(null);
-  const [video, setVideo] = useState(null);
-  const [episode, setEpisode] = useState(null);
-  const [season, setSeason] = useState(null);
-
-  const [uploadedFile, setUploadedFile] = useState({});
-  const [uploadedFile1, setUploadedFile1] = useState({});
-  const [uploadedFile2, setUploadedFile2] = useState({});
-  const [uploadedFile3, setUploadedFile3] = useState({});
-  const [uploadedFile4, setUploadedFile4] = useState({});
-  const [message, setMessage] = useState("");
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [uploadPercentage3, setUploadPercentage3] = useState(0);
-  const [uploadPercentage4, setUploadPercentage4] = useState(0);
-  const [uploadPercentage1, setUploadPercentage1] = useState(0);
-  const [uploadPercentage2, setUploadPercentage2] = useState(0);
-
-  const { isFetching, error, dispatch } = useContext(MovieContext);
-
-  const { lists, dispatch: listDispatch } = useContext(ListContext);
-
-  //console.log(lists);
+  const [catSlug, setCatSlug] = useState(null);
 
   useEffect(() => {
-    getLists(listDispatch);
-  }, [listDispatch]);
-
-  let options = [];
-  lists.map((item) => options.push({ value: item._id, label: item.title }));
-
-  // const options = [
-  //   { value: "chocolate", label: "Chocolate" },
-  //   { value: "strawberry", label: "Strawberry" },
-  //   { value: "vanilla", label: "Vanilla" },
-  // ];
-
-  //const [thumbnail, setThumbnail] = useState("");
-  const [title_pic, setTitlePic] = useState("Upload Title Image");
-  const [small_pic, setSmallPic] = useState("Upload Small Image");
-  const [cover_pic, setCoverPic] = useState("Upload Cover Image");
-  const [videos, setVideos] = useState("Upload video (mp4)");
-  const [trailers, setTrailers] = useState("Upload trailer (mp4)");
-  const [audio, setAudio] = useState("Upload audio");
-
-  useEffect(() => {
-    setTime(null);
-    setSeason(null);
-    setEpisode(null);
-    if (type === "Music") {
-      setTrailer(null);
-      setTrailers("Upload trailer (mp4)");
+    if (title !== null) {
+      setCatSlug(title.toString().toLowerCase().replace(" ", "-"));
     }
-  }, [type]);
+  }, [title]);
 
-  const selectCoverImage = (e) => {
-    //setThumbnail(e.target.files[0].name);
-    setCoverPic(e.target.files[0].name);
-    setImg(e.target.files[0]);
+  const { isFetching, error, dispatch } = useContext(ListContext);
 
-    //console.log(thumbnail);
-  };
-
-  const changeTitlePic = (e) => {
-    setTitlePic(e.target.files[0].name);
-    setImgTitle(e.target.files[0]);
-
-    //console.log(title_pic);
-  };
-
-  const changeSmallPic = (e) => {
-    setSmallPic(e.target.files[0].name);
-    setImgSm(e.target.files[0]);
-  };
-
-  const changeVideo = (e) => {
-    setVideos(e.target.files[0].name);
-    setAudio(e.target.files[0].name);
-    setVideo(e.target.files[0]);
-  };
-
-  const changeTrailer = (e) => {
-    setTrailers(e.target.files[0].name);
-    setTrailer(e.target.files[0]);
-  };
-
-  const uploadMovie = async () => {
-    // e.preventDefault();
-    //cover image
-    if (
-      !img ||
-      !imgSm ||
-      !imgTitle ||
-      !video ||
-      (type !== "Music" && !trailer)
-    ) {
-      toast.error("Please select all images, video and trailer");
-    } else {
-      const formData = new FormData();
-      formData.append("img", img);
-      formData.append("imgSm", imgSm);
-      formData.append("imgTitle", imgTitle);
-      formData.append("video", video);
-      if (type !== "Music") {
-        formData.append("trailer", trailer);
-      }
-
-      try {
-        const res = await axios.post("/upload", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage(0);
-      }
-
-      try {
-        const res = await axios.post("/upload1", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage1(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile1({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage1(0);
-      }
-
-      try {
-        const res = await axios.post("/upload2", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage2(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile2({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage2(0);
-      }
-
-      try {
-        const res = await axios.post("/upload3", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage3(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile3({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-        if (type === "Music") {
-          toast.success("You can publish now");
-        }
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage3(0);
-      }
-
-      if (type !== "Music") {
-        try {
-          const res = await axios.post("/upload4", formData, {
-            headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (progressEvent) => {
-              setUploadPercentage4(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
-              );
-            },
-          });
-
-          // Clear percentage
-          //setTimeout(() => setUploadPercentage(0), 10000);
-
-          const { fileName, filePath } = res.data;
-
-          setUploadedFile4({
-            fileName,
-            filePath,
-          });
-
-          //console.log(uploadedFile);
-
-          setMessage("File Uploaded");
-          toast.success("You can publish now");
-        } catch (err) {
-          if (err.response.status === 500) {
-            toast.error("There was a problem with the server");
-          } else {
-            toast.error(err.response.data.msg);
-          }
-          setUploadPercentage4(0);
-        }
-      }
-    }
-  };
-
-  const addMovie = () => {
-    if (
-      !title ||
-      !desc ||
-      !year ||
-      !time ||
-      !genre ||
-      !category ||
-      (type !== "Music" && !age) ||
-      !cast ||
-      !director ||
-      !writer ||
-      !type ||
-      !img ||
-      !imgTitle ||
-      !imgSm ||
-      (type !== "Music" && !trailer) ||
-      !video
-    ) {
+  const addCategory = () => {
+    if (!title || !type) {
       toast.error("Please fill up all the empty fields");
     } else {
-      createMovie(
+      createList(
         {
           title,
-          desc,
-          year,
-          time,
-          genre,
-          age,
-          cast,
-          director,
-          writer,
           type,
-          category,
-          episode,
-          season,
-          img: uploadedFile.filePath,
-          imgTitle: uploadedFile2.filePath,
-          imgSm: uploadedFile1.filePath,
-          video: uploadedFile3.filePath,
-          trailer: uploadedFile4.filePath,
+          catSlug,
         },
         dispatch
       );
       if (!error) {
-        toast.success("Uploaded Successfully");
+        toast.success("Added Successfully");
         setTitle(null);
-        setDesc(null);
-        setYear(null);
-        setTime(null);
-        setGenre(null);
-        setAge(null);
-        setCast(null);
-        setDirector(null);
-        setWriter(null);
-        setEpisode(null);
-        setSeason(null);
-        setCoverPic("Upload cover image");
-        setSmallPic("Upload small image");
-        setTitlePic("Upload title image");
-        setVideos("Upload video (mp4)");
-        setTrailers("Upload trailers (mp4)");
-        setImg(null);
-        setImgSm(null);
-        setImgTitle(null);
-        setVideo(null);
-        setTrailer(null);
-        setUploadPercentage(0);
-        setUploadPercentage1(0);
-        setUploadPercentage2(0);
-        setUploadPercentage3(0);
-        setUploadPercentage4(0);
+
         window.location.reload();
       } else {
         toast.error("This title is created before");
@@ -419,7 +56,7 @@ const AddItem = () => {
             {/* <!-- main title --> */}
             <div className="col-12">
               <div className="main__title">
-                <h2>Add new content</h2>
+                <h2>Add new category</h2>
               </div>
             </div>
             {/* <!-- end main title --> */}
@@ -431,18 +68,18 @@ const AddItem = () => {
                   <div className="col-12">
                     <ul className="form__radio">
                       <li>
-                        <span>Item type:</span>
+                        <span>Page Name:</span>
                       </li>
                       <li>
                         <input
                           id="type1"
                           type="radio"
                           name="type"
-                          value="Movie"
+                          value="Home"
                           onChange={(e) => setType(e.target.value)}
                           // checked={type === "Series"}
                         />
-                        <label for="type1">Movie</label>
+                        <label for="type1">Home</label>
                       </li>
                       <li>
                         <input
@@ -460,16 +97,38 @@ const AddItem = () => {
                           id="type3"
                           type="radio"
                           name="type"
+                          value="Movies"
+                          onChange={(e) => setType(e.target.value)}
+                          // checked={type === "Series"}
+                        />
+                        <label for="type3">Movies</label>
+                      </li>
+                      <li>
+                        <input
+                          id="type4"
+                          type="radio"
+                          name="type"
+                          value="Popular"
+                          onChange={(e) => setType(e.target.value)}
+                          // checked={type === "Series"}
+                        />
+                        <label for="type4">New and Popular</label>
+                      </li>
+                      <li>
+                        <input
+                          id="type5"
+                          type="radio"
+                          name="type"
                           value="Music"
                           onChange={(e) => setType(e.target.value)}
                           // checked={type === "Series"}
                         />
-                        <label for="type3">Music</label>
+                        <label for="type5">Music</label>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="col-12 col-md-5 form__cover">
+                  {/* <div className="col-12 col-md-5 form__cover">
                     <div className="row">
                       <div className="col-12 col-sm-6 col-md-12">
                         <div className="form__img">
@@ -495,7 +154,7 @@ const AddItem = () => {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="col-12 col-md-7 form__content">
                     <div className="row">
@@ -510,37 +169,18 @@ const AddItem = () => {
                         </div>
                       </div>
 
-                      {type === "Series" ? (
-                        <>
-                          <div className="col-12 col-sm-6 col-lg-6">
-                            <div className="form__group">
-                              <input
-                                type="number"
-                                className="form__input"
-                                placeholder="Season Number"
-                                value={season}
-                                onChange={(e) => setSeason(e.target.value)}
-                              />
-                            </div>
-                          </div>
+                      {/* <div className="col-12">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Slug"
+                            value={catSlug}
+                          />
+                        </div>
+                      </div> */}
 
-                          <div className="col-12 col-sm-6 col-lg-6">
-                            <div className="form__group">
-                              <input
-                                type="number"
-                                className="form__input"
-                                placeholder="Episode Number"
-                                value={episode}
-                                onChange={(e) => setEpisode(e.target.value)}
-                              />
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="form__group">
                           <textarea
                             id="text"
@@ -551,9 +191,9 @@ const AddItem = () => {
                             onChange={(e) => setDesc(e.target.value)}
                           ></textarea>
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-lg-3">
+                      {/* <div className="col-12 col-sm-6 col-lg-3">
                         <div className="form__group">
                           <input
                             type="text"
@@ -563,9 +203,9 @@ const AddItem = () => {
                             onChange={(e) => setYear(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-lg-3">
+                      {/* <div className="col-12 col-sm-6 col-lg-3">
                         <div className="form__group">
                           <input
                             type="text"
@@ -581,9 +221,9 @@ const AddItem = () => {
                             onChange={(e) => setTime(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-lg-3">
+                      {/* <div className="col-12 col-sm-6 col-lg-3">
                         <div className="form__group">
                           <input
                             type="text"
@@ -593,7 +233,7 @@ const AddItem = () => {
                             onChange={(e) => setGenre(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       {/* <div className="col-12 col-sm-6 col-lg-3">
                         <div className="form__group">
@@ -606,7 +246,7 @@ const AddItem = () => {
                           </select>
                         </div>
                       </div> */}
-                      {type !== "Music" && (
+                      {/* {type !== "Music" && (
                         <div className="col-12 col-sm-6 col-lg-3">
                           <div className="form__group">
                             <input
@@ -618,9 +258,9 @@ const AddItem = () => {
                             />
                           </div>
                         </div>
-                      )}
+                      )} */}
 
-                      <div className="col-12 col-sm-6 col-lg-4">
+                      {/* <div className="col-12 col-sm-6 col-lg-4">
                         <div className="form__group">
                           <input
                             type="text"
@@ -632,9 +272,9 @@ const AddItem = () => {
                             onChange={(e) => setCast(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-lg-4">
+                      {/* <div className="col-12 col-sm-6 col-lg-4">
                         <div className="form__group">
                           <input
                             type="text"
@@ -646,9 +286,9 @@ const AddItem = () => {
                             onChange={(e) => setDirector(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-sm-6 col-lg-4">
+                      {/* <div className="col-12 col-sm-6 col-lg-4">
                         <div className="form__group">
                           <input
                             type="text"
@@ -660,7 +300,7 @@ const AddItem = () => {
                             onChange={(e) => setWriter(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       {/* <div className="col-12 col-lg-6">
                         <div className="form__group">
@@ -970,7 +610,7 @@ const AddItem = () => {
                         </div>
                       </div> */}
 
-                      <div className="col-12 col-lg-6">
+                      {/* <div className="col-12 col-lg-6">
                         <div className="form__gallery">
                           <label id="gallery1" for="form__gallery-upload">
                             {title_pic}
@@ -986,9 +626,9 @@ const AddItem = () => {
                             onChange={(e) => changeTitlePic(e)}
                           />
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 col-lg-6">
+                      {/* <div className="col-12 col-lg-6">
                         <div className="form__gallery">
                           <label id="gallery1" for="form__gallery-upload2">
                             {small_pic}
@@ -1004,8 +644,8 @@ const AddItem = () => {
                             onChange={(e) => changeSmallPic(e)}
                           />
                         </div>
-                      </div>
-                      {uploadPercentage1 > 0 && (
+                      </div> */}
+                      {/* {uploadPercentage1 > 0 && (
                         <div className="col-12 col-lg-6">
                           <div className="">
                             <ProgressBar
@@ -1014,9 +654,9 @@ const AddItem = () => {
                             />
                           </div>
                         </div>
-                      )}
+                      )} */}
 
-                      {uploadPercentage2 > 0 && (
+                      {/* {uploadPercentage2 > 0 && (
                         <div className="col-12 col-lg-6">
                           <div className="">
                             <ProgressBar
@@ -1025,7 +665,7 @@ const AddItem = () => {
                             />
                           </div>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
 
@@ -1061,178 +701,26 @@ const AddItem = () => {
 
                   <div className="col-12">
                     <div className="row">
-                      {type !== "Music" ? (
-                        <>
-                          <div className="col-12 col-lg-6">
-                            <div className="form__video">
-                              <label id="movie1" for="form__video-upload">
-                                {videos}
-                              </label>
-                              <input
-                                data-name="#movie1"
-                                id="form__video-upload"
-                                name="movie"
-                                className="form__video-upload"
-                                type="file"
-                                accept="video/mp4,video/x-m4v,video/*,.mkv"
-                                onChange={(e) => changeVideo(e)}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-12 col-lg-6">
-                            <div className="form__video">
-                              <label id="movie2" for="form__video-upload1">
-                                {trailers}
-                              </label>
-                              <input
-                                data-name="#movie2"
-                                id="form__video-upload1"
-                                name="trailer"
-                                className="form__video-upload"
-                                type="file"
-                                accept="video/mp4,video/x-m4v,video/*, .mkv"
-                                onChange={(e) => changeTrailer(e)}
-                              />
-                            </div>
-                          </div>
-
-                          {/* <div className="col-12 col-lg-6">
-                        <div className="form__group form__group--link">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder="or add a link (mp4)"
-                          />
-                        </div>
-                      </div> */}
-                          {uploadPercentage3 > 0 && (
-                            <div className="col-12 col-lg-6">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage3}
-                                  label={`video(${uploadPercentage3}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {uploadPercentage4 > 0 && (
-                            <div className="col-12 col-lg-6">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage4}
-                                  label={`trailer(${uploadPercentage4}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <div className="col-12 col-lg-12">
-                            <div className="form__video">
-                              <label id="music" for="form__video-upload3">
-                                {audio}
-                              </label>
-                              <input
-                                data-name="#music"
-                                id="form__video-upload3"
-                                name="music"
-                                className="form__video-upload"
-                                type="file"
-                                accept="audio/*"
-                                onChange={(e) => changeVideo(e)}
-                              />
-                            </div>
-                          </div>
-
-                          {uploadPercentage3 > 0 && (
-                            <div className="col-12 col-lg-12">
-                              <div className="">
-                                <ProgressBar
-                                  now={uploadPercentage3}
-                                  label={`audio(${uploadPercentage3}%)`}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
-
-                      <div className="col-12 col-lg-12 mb-5 add_content_select">
-                        <Select
-                          defaultValue={null}
-                          placeholder="Select a category"
-                          options={options}
-                          onChange={(e) => setCategory(e.value)}
-                          // theme={(theme) => ({
-                          //   ...theme,
-                          //   borderRadius: 6,
-                          //   colors: {
-                          //     ...theme.colors,
-                          //     text: "white",
-                          //     primary25: "hotpink",
-                          //     primary: "gray",
-
-                          //   },
-                          // })}
-                        />
-                      </div>
-
                       <div className="col-12">
-                        {uploadPercentage +
-                          uploadPercentage1 +
-                          uploadPercentage2 +
-                          uploadPercentage3 +
-                          uploadPercentage4 ===
-                        (type === "Music" ? 400 : 500) ? (
+                        {isFetching ? (
                           <>
-                            {isFetching ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  disabled={true}
-                                >
-                                  publishing...
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  onClick={() => addMovie()}
-                                >
-                                  publish
-                                </button>
-                              </>
-                            )}
+                            <button
+                              type="button"
+                              className="form__btn"
+                              disabled={true}
+                            >
+                              Adding...
+                            </button>
                           </>
                         ) : (
                           <>
-                            {uploadPercentage > 0 && uploadPercentage < 500 ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  disabled={true}
-                                >
-                                  uploading...
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="form__btn"
-                                  onClick={() => uploadMovie()}
-                                >
-                                  upload
-                                </button>
-                              </>
-                            )}
+                            <button
+                              type="button"
+                              className="form__btn"
+                              onClick={() => addCategory()}
+                            >
+                              Add
+                            </button>
                           </>
                         )}
                       </div>
@@ -1250,4 +738,4 @@ const AddItem = () => {
   );
 };
 
-export default AddItem;
+export default AddCategory;

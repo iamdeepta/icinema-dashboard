@@ -12,373 +12,49 @@ import axios from "axios";
 import { ProgressBar } from "react-bootstrap";
 import "./css/add_item.scss";
 import AppUrl from "../classes/AppUrl";
-import Select from "react-select";
 import { ListContext } from "../context/listContext/ListContext";
-import { getLists } from "../context/listContext/apiCalls";
+import { updateList } from "../context/listContext/apiCalls";
 
-const CatalogEdit = ({ mov }) => {
-  const [id, setId] = useState(mov._id);
-  const [title, setTitle] = useState(mov.title);
-  const [desc, setDesc] = useState(mov.desc);
-  const [year, setYear] = useState(mov.year);
-  const [time, setTime] = useState(mov.time);
-  const [genre, setGenre] = useState(mov.genre);
-  const [age, setAge] = useState(mov.age);
-  const [cast, setCast] = useState(mov.cast);
-  const [director, setDirector] = useState(mov.director);
-  const [writer, setWriter] = useState(mov.writer);
-  const [type, setType] = useState(mov.type);
-  const [category, setCategory] = useState(mov.category);
-  const [img, setImg] = useState(mov.img);
-  const [imgSm, setImgSm] = useState(mov.imgSm);
-  const [imgTitle, setImgTitle] = useState(mov.imgTitle);
-
-  const [update_img, setUpdateImg] = useState(null);
-
-  const [episode, setEpisode] = useState(mov.episode);
-  const [season, setSeason] = useState(mov.season);
-
-  const [uploadedFile, setUploadedFile] = useState({});
-  const [uploadedFile1, setUploadedFile1] = useState({});
-  const [uploadedFile2, setUploadedFile2] = useState({});
-  const [message, setMessage] = useState("");
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [uploadPercentage1, setUploadPercentage1] = useState(0);
-  const [uploadPercentage2, setUploadPercentage2] = useState(0);
+const CategoryEdit = ({ cat }) => {
+  const [id, setId] = useState(cat._id);
+  const [title, setTitle] = useState(cat.title);
+  const [type, setType] = useState(cat.type);
+  const [catSlug, setCatSlug] = useState(cat.catSlug);
 
   useEffect(() => {
-    setId(mov._id);
-    setTitle(mov.title);
-    setDesc(mov.desc);
-    setYear(mov.year);
-    setTime(mov.time);
-    setGenre(mov.genre);
-    setAge(mov.age);
-    setCast(mov.cast);
-    setDirector(mov.director);
-    setWriter(mov.writer);
-    setType(mov.type);
-    setCategory(mov.category);
-    setImg(mov.img);
-    setImgSm(mov.imgSm);
-    setImgTitle(mov.imgTitle);
-    // if (type === "Series") {
-    setEpisode(mov.episode);
-    setSeason(mov.season);
-    // } else {
-    //   setEpisode(null);
-    //   setSeason(null);
-    // }
-  }, [mov]);
+    setId(cat._id);
+    setTitle(cat.title);
+    setType(cat.type);
+    setCatSlug(cat.catSlug);
+  }, [cat]);
 
-  useEffect(() => {
-    // setTime(null);
-    setSeason(null);
-    setEpisode(null);
-  }, [type]);
+  //   useEffect(() => {
+  //     setCatSlug(title.toString().toLowerCase().replace(" ", "-"));
+  //   }, [title]);
 
   //   useEffect(() => {
   //     setUploadedFile(uploadedFile);
   //   }, [uploadedFile]);
 
-  const { isFetching, error, dispatch } = useContext(MovieContext);
-  const { lists, dispatch: listDispatch } = useContext(ListContext);
-
-  useEffect(() => {
-    getLists(listDispatch);
-  }, [listDispatch]);
-
-  let options = [];
-  lists.map((item) => options.push({ value: item._id, label: item.title }));
+  const { isFetching, error, dispatch } = useContext(ListContext);
 
   const navigate = useNavigate();
 
-  const [thumbnail, setThumbnail] = useState("Upload Cover Image");
-  const [title_pic, setTitlePic] = useState("Upload Title Image");
-  const [small_pic, setSmallPic] = useState("Upload Small Image");
-
-  const selectCoverImage = async (e) => {
-    setThumbnail(e.target.files[0].name);
-    setImg(e.target.files[0]);
-    //setUpdateImg(e.target.files[0]);
-
-    if (!img) {
-      toast.error("Please select a cover image");
-    } else {
-      const formData = new FormData();
-      formData.append("img", e.target.files[0]);
-
-      try {
-        const res = await axios.post("/uploadfiles", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        //console.log(res);
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          console.log(err.response.data.msg);
-        }
-        setUploadPercentage(0);
-      }
-    }
-    //console.log(uploadedFile.filePath);
-  };
-
-  const selectSmallImage = async (e) => {
-    setSmallPic(e.target.files[0].name);
-    setImgSm(e.target.files[0]);
-
-    if (!imgSm) {
-      toast.error("Please select a small image");
-    } else {
-      const formData = new FormData();
-      formData.append("imgSm", e.target.files[0]);
-
-      try {
-        const res = await axios.post("/uploadfiles1", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage1(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        //console.log(res);
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile1({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          console.log(err.response.data.msg);
-        }
-        setUploadPercentage1(0);
-      }
-    }
-
-    //console.log(title_pic);
-  };
-
-  const selectTitleImage = async (e) => {
-    setTitlePic(e.target.files[0].name);
-    setImgTitle(e.target.files[0]);
-
-    if (!imgTitle) {
-      toast.error("Please select a title image");
-    } else {
-      const formData = new FormData();
-      formData.append("imgTitle", e.target.files[0]);
-
-      try {
-        const res = await axios.post("/uploadfiles2", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage2(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        //console.log(res);
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile2({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          console.log(err.response.data.msg);
-        }
-        setUploadPercentage2(0);
-      }
-    }
-
-    //console.log(title_pic);
-  };
-
   const update = () => {
-    // if (!imgSm) {
-    //   toast.error("Please select a small image");
-    // } else {
-    //   const formData = new FormData();
-    //   formData.append("imgSm", imgSm);
-
-    //   try {
-    //     const res = await axios.post("/uploadfiles1", formData, {
-    //       headers: {
-    //         token:
-    //           "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //       onUploadProgress: (progressEvent) => {
-    //         setUploadPercentage1(
-    //           parseInt(
-    //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
-    //           )
-    //         );
-    //       },
-    //     });
-
-    //     // Clear percentage
-    //     //setTimeout(() => setUploadPercentage(0), 10000);
-
-    //     const { fileName, filePath } = res.data;
-
-    //     setUploadedFile1({
-    //       fileName,
-    //       filePath,
-    //     });
-
-    //     //console.log(uploadedFile);
-
-    //     setMessage("File Uploaded");
-    //   } catch (err) {
-    //     if (err.response.status === 500) {
-    //       toast.error("There was a problem with the server");
-    //     } else {
-    //       console.log(err.response.data.msg);
-    //     }
-    //     setUploadPercentage1(0);
-    //   }
-    // }
-
-    // if (!imgTitle) {
-    //   toast.error("Please select a title image");
-    // } else {
-    //   const formData = new FormData();
-    //   formData.append("imgTitle", imgTitle);
-
-    //   try {
-    //     const res = await axios.post("/uploadfiles2", formData, {
-    //       headers: {
-    //         token:
-    //           "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //       onUploadProgress: (progressEvent) => {
-    //         setUploadPercentage2(
-    //           parseInt(
-    //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
-    //           )
-    //         );
-    //       },
-    //     });
-
-    //     // Clear percentage
-    //     //setTimeout(() => setUploadPercentage(0), 10000);
-
-    //     const { fileName, filePath } = res.data;
-
-    //     setUploadedFile2({
-    //       fileName,
-    //       filePath,
-    //     });
-
-    //     //console.log(uploadedFile);
-
-    //     setMessage("File Uploaded");
-    //   } catch (err) {
-    //     if (err.response.status === 500) {
-    //       toast.error("There was a problem with the server");
-    //     } else {
-    //       console.log(err.response.data.msg);
-    //     }
-    //     setUploadPercentage2(0);
-    //   }
-    // }
-
-    updateMovie(
+    updateList(
       {
         title,
-        desc,
-        year,
-        time,
-        genre,
-        age,
-        cast,
-        director,
-        writer,
         type,
-        category,
-        episode,
-        season,
-        img: uploadedFile.filePath,
-        imgSm: uploadedFile1.filePath,
-        imgTitle: uploadedFile2.filePath,
+        catSlug,
       },
       id,
       dispatch
     );
 
-    console.log(uploadedFile.filePath);
-
     if (!error) {
       toast.success("Updated Successfully");
       setTimeout(() => {
-        navigate("/catalog");
+        navigate("/category");
       }, 2000);
     } else {
       toast.error("Something went wrong. Try again.");
@@ -394,7 +70,7 @@ const CatalogEdit = ({ mov }) => {
             {/* <!-- main title --> */}
             <div className="col-12">
               <div className="main__title">
-                <h2>Edit {mov.title}</h2>
+                <h2>Edit {cat.title} Category</h2>
               </div>
             </div>
             {/* <!-- end main title --> */}
@@ -403,72 +79,6 @@ const CatalogEdit = ({ mov }) => {
             <div className="col-12">
               <form action="#" className="form">
                 <div className="row">
-                  <div className="col-12 col-md-6 ">
-                    <div className="row">
-                      <div className="col-12 col-sm-6 col-md-12">
-                        <div className="form__img">
-                          <label htmlFor="form__img-upload">{thumbnail}</label>
-                          <input
-                            id="form__img-upload"
-                            name="form__img-upload"
-                            type="file"
-                            accept=".png, .jpg, .jpeg"
-                            onChange={(e) => selectCoverImage(e)}
-                          />
-                          <img
-                            id="form__img"
-                            src={AppUrl.base_url + img}
-                            alt=" "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-12 col-md-6">
-                    <div className="row">
-                      <div className="col-12 col-sm-6 col-md-12">
-                        <div className="form__img">
-                          <label htmlFor="form__img-upload1">{small_pic}</label>
-                          <input
-                            id="form__img-upload1"
-                            name="form__img-upload1"
-                            type="file"
-                            accept=".png, .jpg, .jpeg"
-                            onChange={(e) => selectSmallImage(e)}
-                          />
-                          <img
-                            id="form__img"
-                            src={AppUrl.base_url + imgSm}
-                            alt=" "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-12 col-md-5 form__cover">
-                    <div className="row">
-                      <div className="col-12 col-sm-6 col-md-12">
-                        <div className="form__img">
-                          <label htmlFor="form__img-upload2">{title_pic}</label>
-                          <input
-                            id="form__img-upload2"
-                            name="form__img-upload2"
-                            type="file"
-                            accept=".png, .jpg, .jpeg"
-                            onChange={(e) => selectTitleImage(e)}
-                          />
-                          <img
-                            id="form__img"
-                            src={AppUrl.base_url + imgTitle}
-                            alt=" "
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="col-12 col-md-7 form__content">
                     <div className="row">
                       <div className="col-12">
@@ -479,85 +89,6 @@ const CatalogEdit = ({ mov }) => {
                             placeholder="Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      {type === "Series" && (
-                        <>
-                          <div className="col-12 col-sm-6 col-lg-6">
-                            <div className="form__group">
-                              <input
-                                type="number"
-                                className="form__input"
-                                placeholder="Season Number"
-                                value={season}
-                                onChange={(e) => setSeason(e.target.value)}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-12 col-sm-6 col-lg-6">
-                            <div className="form__group">
-                              <input
-                                type="number"
-                                className="form__input"
-                                placeholder="Episode Number"
-                                value={episode}
-                                onChange={(e) => setEpisode(e.target.value)}
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="col-12">
-                        <div className="form__group">
-                          <textarea
-                            id="text"
-                            name="text"
-                            className="form__textarea"
-                            placeholder="Description"
-                            value={desc}
-                            onChange={(e) => setDesc(e.target.value)}
-                          ></textarea>
-                        </div>
-                      </div>
-
-                      <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder="Release year"
-                            value={year}
-                            onChange={(e) => setYear(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder={
-                              type === "Series" ? "Total Season" : "Duration"
-                            }
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder="Genre"
-                            value={genre}
-                            onChange={(e) => setGenre(e.target.value)}
                           />
                         </div>
                       </div>
@@ -573,61 +104,6 @@ const CatalogEdit = ({ mov }) => {
                           </select>
                         </div>
                       </div> */}
-                      {type !== "Music" && (
-                        <div className="col-12 col-sm-6 col-lg-3">
-                          <div className="form__group">
-                            <input
-                              type="number"
-                              className="form__input"
-                              placeholder="Age"
-                              value={age}
-                              onChange={(e) => setAge(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="col-12 col-sm-6 col-lg-4">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder={
-                              type !== "Music" ? "Casts" : "Singer/Artist"
-                            }
-                            value={cast}
-                            onChange={(e) => setCast(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-12 col-sm-6 col-lg-4">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder={
-                              type !== "Music" ? "Director" : "Composer"
-                            }
-                            value={director}
-                            onChange={(e) => setDirector(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-12 col-sm-6 col-lg-4">
-                        <div className="form__group">
-                          <input
-                            type="text"
-                            className="form__input"
-                            placeholder={
-                              type !== "Music" ? "Writer" : "Lyrics Writer"
-                            }
-                            value={writer}
-                            onChange={(e) => setWriter(e.target.value)}
-                          />
-                        </div>
-                      </div>
 
                       {/* <div className="col-12 col-lg-6">
                         <div className="form__group">
@@ -960,18 +436,18 @@ const CatalogEdit = ({ mov }) => {
                   <div className="col-12">
                     <ul className="form__radio">
                       <li>
-                        <span>Item type:</span>
+                        <span>Page Name:</span>
                       </li>
                       <li>
                         <input
                           id="type1"
                           type="radio"
                           name="type"
-                          value="Movie"
+                          value="Home"
                           onChange={(e) => setType(e.target.value)}
-                          checked={type === "Movie"}
+                          checked={type === "Home"}
                         />
-                        <label for="type1">Movie</label>
+                        <label for="type1">Home</label>
                       </li>
                       <li>
                         <input
@@ -989,11 +465,33 @@ const CatalogEdit = ({ mov }) => {
                           id="type3"
                           type="radio"
                           name="type3"
+                          value="Movies"
+                          onChange={(e) => setType(e.target.value)}
+                          checked={type === "Movies"}
+                        />
+                        <label for="type3">Movies</label>
+                      </li>
+                      <li>
+                        <input
+                          id="type4"
+                          type="radio"
+                          name="type4"
+                          value="Popular"
+                          onChange={(e) => setType(e.target.value)}
+                          checked={type === "Popular"}
+                        />
+                        <label for="type4">Popular</label>
+                      </li>
+                      <li>
+                        <input
+                          id="type5"
+                          type="radio"
+                          name="type5"
                           value="Music"
                           onChange={(e) => setType(e.target.value)}
                           checked={type === "Music"}
                         />
-                        <label for="type3">Music</label>
+                        <label for="type5">Music</label>
                       </li>
                     </ul>
                   </div>
@@ -1025,39 +523,6 @@ const CatalogEdit = ({ mov }) => {
                           />
                         </div>
                       </div> */}
-
-                      <div className="col-12 col-lg-12 mb-5 add_content_select">
-                        <Select
-                          defaultValue={category}
-                          placeholder={
-                            category
-                              ? lists
-                                  // eslint-disable-next-line array-callback-return
-                                  .filter((item) => {
-                                    if (item._id === category) {
-                                      return item;
-                                    }
-                                  })
-                                  .map((item) => item.title)
-                              : "Select a category"
-                          }
-                          options={options}
-                          selectedValue={category}
-                          onChange={(e) => setCategory(e.value)}
-
-                          // theme={(theme) => ({
-                          //   ...theme,
-                          //   borderRadius: 6,
-                          //   colors: {
-                          //     ...theme.colors,
-                          //     text: "white",
-                          //     primary25: "hotpink",
-                          //     primary: "gray",
-
-                          //   },
-                          // })}
-                        />
-                      </div>
 
                       <div className="col-12">
                         {isFetching ? (
@@ -1096,4 +561,4 @@ const CatalogEdit = ({ mov }) => {
   );
 };
 
-export default CatalogEdit;
+export default CategoryEdit;

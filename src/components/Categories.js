@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getMovies } from "../context/movieContext/apiCalls";
 import { MovieContext } from "../context/movieContext/MovieContext";
-import CatalogModals from "./CatalogModals";
+import CategoryModals from "./CategoryModals";
 import "./css/catalog_content.scss";
 import AppUrl from "../classes/AppUrl";
 import { ListContext } from "../context/listContext/ListContext";
 import { getLists } from "../context/listContext/apiCalls";
 
-const CatalogContent = () => {
+const Categories = () => {
   const [selectedId, setSelectedId] = useState(null);
 
   const handleClose = () => setSelectedId(null);
@@ -18,16 +18,11 @@ const CatalogContent = () => {
     setSelectedId(id);
   };
 
-  const { movies, dispatch } = useContext(MovieContext);
-  const { lists, dispatch: listDispatch } = useContext(ListContext);
+  const { lists, dispatch } = useContext(ListContext);
 
   useEffect(() => {
-    getMovies(dispatch);
+    getLists(dispatch);
   }, [dispatch]);
-
-  useEffect(() => {
-    getLists(listDispatch);
-  }, [listDispatch]);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -41,9 +36,9 @@ const CatalogContent = () => {
             {/* <!-- main title --> */}
             <div className="col-12">
               <div className="main__title">
-                <h2>Contents</h2>
+                <h2>Categories</h2>
 
-                <span className="main__title-stat">{movies.length} total</span>
+                <span className="main__title-stat">{lists.length} total</span>
 
                 <div className="main__title-wrap">
                   {/* <!-- filter sort --> */}
@@ -77,7 +72,7 @@ const CatalogContent = () => {
                   <form action="#" className="main__title-form">
                     <input
                       type="text"
-                      placeholder="Find movie/series/music.."
+                      placeholder="Find categories.."
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <button type="button">
@@ -121,22 +116,16 @@ const CatalogContent = () => {
                     <tr>
                       <th>#</th>
                       <th>TITLE</th>
-                      {/* <th>COVER</th> */}
-                      <th>TITLE IMG</th>
-                      <th>SMALL IMG</th>
-                      <th>TYPE</th>
-                      <th>CATEGORY</th>
-                      <th>YEAR</th>
-                      <th>GENRE</th>
+                      <th>PAGE NAME</th>
+
                       {/* <th>STATUS</th> */}
-                      <th>UPLAOD DATE</th>
+                      <th>CREATED DATE</th>
                       <th>ACTIONS</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    {movies
-                      // eslint-disable-next-line array-callback-return
+                    {lists
                       .filter((u) => {
                         if (searchTerm === "") {
                           return u;
@@ -153,25 +142,7 @@ const CatalogContent = () => {
                         ) {
                           return u;
                         } else if (
-                          u.year
-                            .toLowerCase()
-                            .includes(searchTerm.toLocaleLowerCase())
-                        ) {
-                          return u;
-                        } else if (
-                          u.genre
-                            .toLowerCase()
-                            .includes(searchTerm.toLocaleLowerCase())
-                        ) {
-                          return u;
-                        } else if (
                           u.createdAt
-                            .toLowerCase()
-                            .includes(searchTerm.toLocaleLowerCase())
-                        ) {
-                          return u;
-                        } else if (
-                          u.category
                             .toLowerCase()
                             .includes(searchTerm.toLocaleLowerCase())
                         ) {
@@ -188,58 +159,11 @@ const CatalogContent = () => {
                               <Link to="#">{item.title}</Link>
                             </div>
                           </td>
-                          {/* <td>
-                            <div className="main__table-text">
-                              <img src={AppUrl.base_url + item.img} alt="" />
-                            </div> */}
-                          {/* <div className="main__table-text main__table-text--rate">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                            </svg>{" "}
-                            7.9
-                          </div> */}
-                          {/* </td> */}
-                          <td>
-                            <div className="main__table-text">
-                              <img
-                                src={AppUrl.base_url + item.imgTitle}
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <div className="main__table-text">
-                              <img src={AppUrl.base_url + item.imgSm} alt="" />
-                            </div>
-                          </td>
+
                           <td>
                             <div className="main__table-text">{item.type}</div>
                           </td>
-                          <td>
-                            <div className="main__table-text">
-                              {lists
-                                .filter((u) => {
-                                  if (u._id === item.category) {
-                                    return u;
-                                  }
-                                })
-                                .map((c) => c.title)}
-                            </div>
-                          </td>
-                          <td>
-                            <div className="main__table-text">{item.year}</div>
-                          </td>
-                          <td>
-                            <div className="main__table-text">{item.genre}</div>
-                          </td>
-                          {/* <td>
-                          <div className="main__table-text main__table-text--green">
-                            Visible
-                          </div>
-                        </td> */}
+
                           <td>
                             <div className="main__table-text">
                               {item.createdAt.substr(0, 10)}
@@ -271,8 +195,8 @@ const CatalogContent = () => {
                             </Link> */}
                               <Link
                                 to={{
-                                  pathname: "/edit-catalog/" + item._id,
-                                  movie: item,
+                                  pathname: "/edit-category/" + item._id,
+                                  list: item,
                                 }}
                                 className="main__table-btn main__table-btn--edit"
                               >
@@ -1544,7 +1468,7 @@ const CatalogContent = () => {
       {/* <!-- end main content --> */}
 
       {selectedId && (
-        <CatalogModals
+        <CategoryModals
           selectedId={selectedId}
           setSelectedId={setSelectedId}
           dispatch={dispatch}
@@ -1554,4 +1478,4 @@ const CatalogContent = () => {
   );
 };
 
-export default CatalogContent;
+export default Categories;
