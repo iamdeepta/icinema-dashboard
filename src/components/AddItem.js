@@ -30,6 +30,7 @@ const AddItem = () => {
   const [video, setVideo] = useState(null);
   const [episode, setEpisode] = useState(null);
   const [season, setSeason] = useState(null);
+  const [totalSeason, setTotalSeason] = useState(null);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -74,6 +75,7 @@ const AddItem = () => {
     setTime(null);
     setSeason(null);
     setEpisode(null);
+    setTotalSeason(null);
     if (type === "Music") {
       setTrailer(null);
       setTrailers("Upload trailer (mp4)");
@@ -367,6 +369,7 @@ const AddItem = () => {
           category,
           episode,
           season,
+          totalSeason,
           img: uploadedFile.filePath,
           imgTitle: uploadedFile2.filePath,
           imgSm: uploadedFile1.filePath,
@@ -388,6 +391,7 @@ const AddItem = () => {
         setWriter(null);
         setEpisode(null);
         setSeason(null);
+        setTotalSeason(null);
         setCoverPic("Upload cover image");
         setSmallPic("Upload small image");
         setTitlePic("Upload title image");
@@ -512,7 +516,7 @@ const AddItem = () => {
 
                       {type === "Series" ? (
                         <>
-                          <div className="col-12 col-sm-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-lg-4">
                             <div className="form__group">
                               <input
                                 type="number"
@@ -524,7 +528,7 @@ const AddItem = () => {
                             </div>
                           </div>
 
-                          <div className="col-12 col-sm-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-lg-4">
                             <div className="form__group">
                               <input
                                 type="number"
@@ -532,6 +536,18 @@ const AddItem = () => {
                                 placeholder="Episode Number"
                                 value={episode}
                                 onChange={(e) => setEpisode(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="number"
+                                className="form__input"
+                                placeholder="Total Season Number"
+                                value={totalSeason}
+                                onChange={(e) => setTotalSeason(e.target.value)}
                               />
                             </div>
                           </div>
@@ -574,8 +590,8 @@ const AddItem = () => {
                               type === "Movie"
                                 ? "Duration"
                                 : type === "Series"
-                                ? "Total Season"
-                                : "Duration/total season"
+                                ? "Duration"
+                                : "Duration"
                             }
                             value={time}
                             onChange={(e) => setTime(e.target.value)}

@@ -37,6 +37,7 @@ const CatalogEdit = ({ mov }) => {
 
   const [episode, setEpisode] = useState(mov.episode);
   const [season, setSeason] = useState(mov.season);
+  const [totalSeason, setTotalSeason] = useState(mov.season);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -65,6 +66,7 @@ const CatalogEdit = ({ mov }) => {
     // if (type === "Series") {
     setEpisode(mov.episode);
     setSeason(mov.season);
+    setTotalSeason(mov.totalSeason);
     // } else {
     //   setEpisode(null);
     //   setSeason(null);
@@ -365,6 +367,7 @@ const CatalogEdit = ({ mov }) => {
         category,
         episode,
         season,
+        totalSeason,
         img: uploadedFile.filePath,
         imgSm: uploadedFile1.filePath,
         imgTitle: uploadedFile2.filePath,
@@ -485,7 +488,7 @@ const CatalogEdit = ({ mov }) => {
 
                       {type === "Series" && (
                         <>
-                          <div className="col-12 col-sm-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-lg-4">
                             <div className="form__group">
                               <input
                                 type="number"
@@ -497,7 +500,7 @@ const CatalogEdit = ({ mov }) => {
                             </div>
                           </div>
 
-                          <div className="col-12 col-sm-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-lg-4">
                             <div className="form__group">
                               <input
                                 type="number"
@@ -505,6 +508,18 @@ const CatalogEdit = ({ mov }) => {
                                 placeholder="Episode Number"
                                 value={episode}
                                 onChange={(e) => setEpisode(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="number"
+                                className="form__input"
+                                placeholder="Total Season Number"
+                                value={totalSeason}
+                                onChange={(e) => setTotalSeason(e.target.value)}
                               />
                             </div>
                           </div>
@@ -542,7 +557,7 @@ const CatalogEdit = ({ mov }) => {
                             type="text"
                             className="form__input"
                             placeholder={
-                              type === "Series" ? "Total Season" : "Duration"
+                              type === "Series" ? "Duration" : "Duration"
                             }
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
