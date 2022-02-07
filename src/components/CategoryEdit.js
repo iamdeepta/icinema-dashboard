@@ -18,12 +18,14 @@ import { updateList } from "../context/listContext/apiCalls";
 const CategoryEdit = ({ cat }) => {
   const [id, setId] = useState(cat._id);
   const [title, setTitle] = useState(cat.title);
+  const [title_bn, setTitleBn] = useState(cat.title_bn);
   const [type, setType] = useState(cat.type);
   const [catSlug, setCatSlug] = useState(cat.catSlug);
 
   useEffect(() => {
     setId(cat._id);
     setTitle(cat.title);
+    setTitleBn(cat.title_bn);
     setType(cat.type);
     setCatSlug(cat.catSlug);
   }, [cat]);
@@ -44,6 +46,7 @@ const CategoryEdit = ({ cat }) => {
     updateList(
       {
         title,
+        title_bn,
         type,
         catSlug,
       },
@@ -89,6 +92,18 @@ const CategoryEdit = ({ cat }) => {
                             placeholder="Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Title (Bangla)"
+                            value={title_bn}
+                            onChange={(e) => setTitleBn(e.target.value)}
                           />
                         </div>
                       </div>

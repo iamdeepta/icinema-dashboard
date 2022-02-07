@@ -19,14 +19,23 @@ import { getLists } from "../context/listContext/apiCalls";
 const CatalogEdit = ({ mov }) => {
   const [id, setId] = useState(mov._id);
   const [title, setTitle] = useState(mov.title);
+  const [title_bn, setTitleBn] = useState(mov.title_bn);
   const [desc, setDesc] = useState(mov.desc);
+  const [desc_bn, setDescBn] = useState(mov.desc_bn);
   const [year, setYear] = useState(mov.year);
+  const [year_bn, setYearBn] = useState(mov.year_bn);
   const [time, setTime] = useState(mov.time);
+  const [time_bn, setTimeBn] = useState(mov.time_bn);
   const [genre, setGenre] = useState(mov.genre);
+  const [genre_bn, setGenreBn] = useState(mov.genre_bn);
   const [age, setAge] = useState(mov.age);
+  const [age_bn, setAgeBn] = useState(mov.age_bn);
   const [cast, setCast] = useState(mov.cast);
+  const [cast_bn, setCastBn] = useState(mov.cast_bn);
   const [director, setDirector] = useState(mov.director);
+  const [director_bn, setDirectorBn] = useState(mov.director_bn);
   const [writer, setWriter] = useState(mov.writer);
+  const [writer_bn, setWriterBn] = useState(mov.writer_bn);
   const [type, setType] = useState(mov.type);
   const [category, setCategory] = useState(mov.category);
   const [img, setImg] = useState(mov.img);
@@ -36,8 +45,11 @@ const CatalogEdit = ({ mov }) => {
   const [update_img, setUpdateImg] = useState(null);
 
   const [episode, setEpisode] = useState(mov.episode);
+  const [episode_bn, setEpisodeBn] = useState(mov.episode_bn);
   const [season, setSeason] = useState(mov.season);
-  const [totalSeason, setTotalSeason] = useState(mov.season);
+  const [season_bn, setSeasonBn] = useState(mov.season_bn);
+  const [totalSeason, setTotalSeason] = useState(mov.totalSeason);
+  const [totalSeason_bn, setTotalSeasonBn] = useState(mov.totalSeason_bn);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -50,14 +62,23 @@ const CatalogEdit = ({ mov }) => {
   useEffect(() => {
     setId(mov._id);
     setTitle(mov.title);
+    setTitleBn(mov.title_bn);
     setDesc(mov.desc);
+    setDescBn(mov.desc_bn);
     setYear(mov.year);
+    setYearBn(mov.year_bn);
     setTime(mov.time);
+    setTimeBn(mov.time_bn);
     setGenre(mov.genre);
+    setGenreBn(mov.genre_bn);
     setAge(mov.age);
+    setAgeBn(mov.age_bn);
     setCast(mov.cast);
+    setCastBn(mov.cast_bn);
     setDirector(mov.director);
+    setDirectorBn(mov.director_bn);
     setWriter(mov.writer);
+    setWriterBn(mov.writer_bn);
     setType(mov.type);
     setCategory(mov.category);
     setImg(mov.img);
@@ -65,8 +86,11 @@ const CatalogEdit = ({ mov }) => {
     setImgTitle(mov.imgTitle);
     // if (type === "Series") {
     setEpisode(mov.episode);
+    setEpisodeBn(mov.episode_bn);
     setSeason(mov.season);
+    setSeasonBn(mov.season_bn);
     setTotalSeason(mov.totalSeason);
+    setTotalSeasonBn(mov.totalSeason_bn);
     // } else {
     //   setEpisode(null);
     //   setSeason(null);
@@ -75,8 +99,21 @@ const CatalogEdit = ({ mov }) => {
 
   useEffect(() => {
     // setTime(null);
-    setSeason(null);
-    setEpisode(null);
+    if (type !== "Series") {
+      setSeason(null);
+      setSeasonBn(null);
+      setEpisode(null);
+      setEpisodeBn(null);
+      setTotalSeason(null);
+      setTotalSeasonBn(null);
+    } else {
+      setSeason(mov.season);
+      setSeasonBn(mov.season_bn);
+      setEpisode(mov.episode);
+      setEpisodeBn(mov.episode_bn);
+      setTotalSeason(mov.totalSeason);
+      setTotalSeasonBn(mov.totalSeason_bn);
+    }
   }, [type]);
 
   //   useEffect(() => {
@@ -355,19 +392,31 @@ const CatalogEdit = ({ mov }) => {
     updateMovie(
       {
         title,
+        title_bn,
         desc,
+        desc_bn,
         year,
+        year_bn,
         time,
+        time_bn,
         genre,
+        genre_bn,
         age,
+        age_bn,
         cast,
+        cast_bn,
         director,
+        director_bn,
         writer,
+        writer_bn,
         type,
         category,
         episode,
+        episode_bn,
         season,
+        season_bn,
         totalSeason,
+        totalSeason_bn,
         img: uploadedFile.filePath,
         imgSm: uploadedFile1.filePath,
         imgTitle: uploadedFile2.filePath,
@@ -474,7 +523,7 @@ const CatalogEdit = ({ mov }) => {
 
                   <div className="col-12 col-md-7 form__content">
                     <div className="row">
-                      <div className="col-12">
+                      <div className="col-6">
                         <div className="form__group">
                           <input
                             type="text"
@@ -482,6 +531,18 @@ const CatalogEdit = ({ mov }) => {
                             placeholder="Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Title (BN)"
+                            value={title_bn}
+                            onChange={(e) => setTitleBn(e.target.value)}
                           />
                         </div>
                       </div>
@@ -523,10 +584,49 @@ const CatalogEdit = ({ mov }) => {
                               />
                             </div>
                           </div>
+
+                          {/* bangla */}
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Season Number (BN)"
+                                value={season_bn}
+                                onChange={(e) => setSeasonBn(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Episode Number (BN)"
+                                value={episode_bn}
+                                onChange={(e) => setEpisodeBn(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Total Season Number (BN)"
+                                value={totalSeason_bn}
+                                onChange={(e) =>
+                                  setTotalSeasonBn(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
                         </>
                       )}
 
-                      <div className="col-12">
+                      <div className="col-6">
                         <div className="form__group">
                           <textarea
                             id="text"
@@ -535,6 +635,19 @@ const CatalogEdit = ({ mov }) => {
                             placeholder="Description"
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
+                          ></textarea>
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form__group">
+                          <textarea
+                            id="text"
+                            name="text"
+                            className="form__textarea"
+                            placeholder="Description (BN)"
+                            value={desc_bn}
+                            onChange={(e) => setDescBn(e.target.value)}
                           ></textarea>
                         </div>
                       </div>
@@ -602,6 +715,61 @@ const CatalogEdit = ({ mov }) => {
                         </div>
                       )}
 
+                      {/* bangla */}
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Release year (BN)"
+                            value={year_bn}
+                            onChange={(e) => setYearBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type === "Series"
+                                ? "Duration (BN)"
+                                : "Duration (BN)"
+                            }
+                            value={time_bn}
+                            onChange={(e) => setTimeBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Genre (BN)"
+                            value={genre_bn}
+                            onChange={(e) => setGenreBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {type !== "Music" && (
+                        <div className="col-12 col-sm-6 col-lg-3">
+                          <div className="form__group">
+                            <input
+                              type="text"
+                              className="form__input"
+                              placeholder="Age (BN)"
+                              value={age_bn}
+                              onChange={(e) => setAgeBn(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       <div className="col-12 col-sm-6 col-lg-4">
                         <div className="form__group">
                           <input
@@ -640,6 +808,55 @@ const CatalogEdit = ({ mov }) => {
                             }
                             value={writer}
                             onChange={(e) => setWriter(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* bangla */}
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Casts (BN)"
+                                : "Singer/Artist (BN)"
+                            }
+                            value={cast_bn}
+                            onChange={(e) => setCastBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Director (BN)"
+                                : "Composer (BN)"
+                            }
+                            value={director_bn}
+                            onChange={(e) => setDirectorBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Writer (BN)"
+                                : "Lyrics Writer (BN)"
+                            }
+                            value={writer_bn}
+                            onChange={(e) => setWriterBn(e.target.value)}
                           />
                         </div>
                       </div>

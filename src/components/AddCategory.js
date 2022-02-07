@@ -12,6 +12,7 @@ import { createList } from "../context/listContext/apiCalls";
 
 const AddCategory = () => {
   const [title, setTitle] = useState(null);
+  const [title_bn, setTitleBn] = useState(null);
 
   const [type, setType] = useState(null);
   const [catSlug, setCatSlug] = useState(null);
@@ -25,12 +26,13 @@ const AddCategory = () => {
   const { isFetching, error, dispatch } = useContext(ListContext);
 
   const addCategory = () => {
-    if (!title || !type) {
+    if (!title || !title_bn || !type) {
       toast.error("Please fill up all the empty fields");
     } else {
       createList(
         {
           title,
+          title_bn,
           type,
           catSlug,
         },
@@ -165,6 +167,17 @@ const AddCategory = () => {
                             className="form__input"
                             placeholder="Title"
                             onChange={(e) => setTitle(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Title (Bangla)"
+                            onChange={(e) => setTitleBn(e.target.value)}
                           />
                         </div>
                       </div>

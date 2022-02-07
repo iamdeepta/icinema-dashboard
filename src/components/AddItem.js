@@ -13,14 +13,23 @@ import { getLists } from "../context/listContext/apiCalls";
 
 const AddItem = () => {
   const [title, setTitle] = useState(null);
+  const [title_bn, setTitleBn] = useState(null);
   const [desc, setDesc] = useState(null);
+  const [desc_bn, setDescBn] = useState(null);
   const [year, setYear] = useState(null);
+  const [year_bn, setYearBn] = useState(null);
   const [time, setTime] = useState(null);
+  const [time_bn, setTimeBn] = useState(null);
   const [genre, setGenre] = useState(null);
+  const [genre_bn, setGenreBn] = useState(null);
   const [age, setAge] = useState(null);
+  const [age_bn, setAgeBn] = useState(null);
   const [cast, setCast] = useState(null);
+  const [cast_bn, setCastBn] = useState(null);
   const [director, setDirector] = useState(null);
+  const [director_bn, setDirectorBn] = useState(null);
   const [writer, setWriter] = useState(null);
+  const [writer_bn, setWriterBn] = useState(null);
   const [type, setType] = useState(null);
   const [category, setCategory] = useState(null);
   const [img, setImg] = useState(null);
@@ -29,8 +38,11 @@ const AddItem = () => {
   const [trailer, setTrailer] = useState(null);
   const [video, setVideo] = useState(null);
   const [episode, setEpisode] = useState(null);
+  const [episode_bn, setEpisodeBn] = useState(null);
   const [season, setSeason] = useState(null);
+  const [season_bn, setSeasonBn] = useState(null);
   const [totalSeason, setTotalSeason] = useState(null);
+  const [totalSeason_bn, setTotalSeasonBn] = useState(null);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -73,9 +85,13 @@ const AddItem = () => {
 
   useEffect(() => {
     setTime(null);
+    setTimeBn(null);
     setSeason(null);
+    setSeasonBn(null);
     setEpisode(null);
+    setEpisodeBn(null);
     setTotalSeason(null);
+    setTotalSeasonBn(null);
     if (type === "Music") {
       setTrailer(null);
       setTrailers("Upload trailer (mp4)");
@@ -336,15 +352,23 @@ const AddItem = () => {
   const addMovie = () => {
     if (
       !title ||
+      !title_bn ||
       !desc ||
+      !desc_bn ||
       !year ||
+      !year_bn ||
       !time ||
+      !time_bn ||
       !genre ||
+      !genre_bn ||
       !category ||
       (type !== "Music" && !age) ||
       !cast ||
+      !cast_bn ||
       !director ||
+      !director_bn ||
       !writer ||
+      !writer_bn ||
       !type ||
       !img ||
       !imgTitle ||
@@ -357,19 +381,31 @@ const AddItem = () => {
       createMovie(
         {
           title,
+          title_bn,
           desc,
+          desc_bn,
           year,
+          year_bn,
           time,
+          time_bn,
           genre,
+          genre_bn,
           age,
+          age_bn,
           cast,
+          cast_bn,
           director,
+          director_bn,
           writer,
+          writer_bn,
           type,
           category,
           episode,
+          episode_bn,
           season,
+          season_bn,
           totalSeason,
+          totalSeason_bn,
           img: uploadedFile.filePath,
           imgTitle: uploadedFile2.filePath,
           imgSm: uploadedFile1.filePath,
@@ -381,17 +417,29 @@ const AddItem = () => {
       if (!error) {
         toast.success("Uploaded Successfully");
         setTitle(null);
+        setTitleBn(null);
         setDesc(null);
+        setDescBn(null);
         setYear(null);
+        setYearBn(null);
         setTime(null);
+        setTimeBn(null);
         setGenre(null);
+        setGenreBn(null);
         setAge(null);
+        setAgeBn(null);
         setCast(null);
+        setCastBn(null);
         setDirector(null);
+        setDirectorBn(null);
         setWriter(null);
+        setWriterBn(null);
         setEpisode(null);
+        setEpisodeBn(null);
         setSeason(null);
+        setSeasonBn(null);
         setTotalSeason(null);
+        setTotalSeasonBn(null);
         setCoverPic("Upload cover image");
         setSmallPic("Upload small image");
         setTitlePic("Upload title image");
@@ -503,13 +551,24 @@ const AddItem = () => {
 
                   <div className="col-12 col-md-7 form__content">
                     <div className="row">
-                      <div className="col-12">
+                      <div className="col-6">
                         <div className="form__group">
                           <input
                             type="text"
                             className="form__input"
                             placeholder="Title"
                             onChange={(e) => setTitle(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Title (BN)"
+                            onChange={(e) => setTitleBn(e.target.value)}
                           />
                         </div>
                       </div>
@@ -551,12 +610,51 @@ const AddItem = () => {
                               />
                             </div>
                           </div>
+
+                          {/* bangla */}
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Season Number (BN)"
+                                value={season_bn}
+                                onChange={(e) => setSeasonBn(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Episode Number (BN)"
+                                value={episode_bn}
+                                onChange={(e) => setEpisodeBn(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-12 col-sm-6 col-lg-4">
+                            <div className="form__group">
+                              <input
+                                type="text"
+                                className="form__input"
+                                placeholder="Total Season Number (BN)"
+                                value={totalSeason_bn}
+                                onChange={(e) =>
+                                  setTotalSeasonBn(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
                         </>
                       ) : (
                         <></>
                       )}
 
-                      <div className="col-12">
+                      <div className="col-6">
                         <div className="form__group">
                           <textarea
                             id="text"
@@ -565,6 +663,19 @@ const AddItem = () => {
                             placeholder="Description"
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
+                          ></textarea>
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form__group">
+                          <textarea
+                            id="text"
+                            name="text"
+                            className="form__textarea"
+                            placeholder="Description (BN)"
+                            value={desc_bn}
+                            onChange={(e) => setDescBn(e.target.value)}
                           ></textarea>
                         </div>
                       </div>
@@ -636,6 +747,63 @@ const AddItem = () => {
                         </div>
                       )}
 
+                      {/* bangla */}
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Release year (BN)"
+                            value={year_bn}
+                            onChange={(e) => setYearBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type === "Movie"
+                                ? "Duration (BN)"
+                                : type === "Series"
+                                ? "Duration (BN)"
+                                : "Duration (BN)"
+                            }
+                            value={time_bn}
+                            onChange={(e) => setTimeBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Genre (BN)"
+                            value={genre_bn}
+                            onChange={(e) => setGenreBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {type !== "Music" && (
+                        <div className="col-12 col-sm-6 col-lg-3">
+                          <div className="form__group">
+                            <input
+                              type="text"
+                              className="form__input"
+                              placeholder="Age (BN)"
+                              value={age_bn}
+                              onChange={(e) => setAgeBn(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       <div className="col-12 col-sm-6 col-lg-4">
                         <div className="form__group">
                           <input
@@ -674,6 +842,55 @@ const AddItem = () => {
                             }
                             value={writer}
                             onChange={(e) => setWriter(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* bangla */}
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Casts (BN)"
+                                : "Singer/Artist (BN)"
+                            }
+                            value={cast_bn}
+                            onChange={(e) => setCastBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Director (BN)"
+                                : "Composer (BN)"
+                            }
+                            value={director_bn}
+                            onChange={(e) => setDirectorBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-4">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder={
+                              type !== "Music"
+                                ? "Writer (BN)"
+                                : "Lyrics Writer (BN)"
+                            }
+                            value={writer_bn}
+                            onChange={(e) => setWriterBn(e.target.value)}
                           />
                         </div>
                       </div>

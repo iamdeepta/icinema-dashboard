@@ -116,6 +116,7 @@ const Categories = () => {
                     <tr>
                       <th>#</th>
                       <th>TITLE</th>
+                      <th>TITLE(BN)</th>
                       <th>PAGE NAME</th>
 
                       {/* <th>STATUS</th> */}
@@ -157,6 +158,12 @@ const Categories = () => {
                           <td>
                             <div className="main__table-text">
                               <Link to="#">{item.title}</Link>
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="main__table-text">
+                              <Link to="#">{item.title_bn}</Link>
                             </div>
                           </td>
 
