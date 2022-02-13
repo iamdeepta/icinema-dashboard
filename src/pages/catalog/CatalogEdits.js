@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CatalogEdit from "../../components/CatalogEdit";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import AppUrl from "../../classes/AppUrl";
 
 const CatalogEdits = () => {
   const { pathname } = useLocation();
@@ -22,7 +23,7 @@ const CatalogEdits = () => {
     const getMovies = async () => {
       try {
         const res = await axios.get(
-          "/movies/find/" + pathname.split("/").pop(),
+          AppUrl.base_url + "/movies/find/" + pathname.split("/").pop(),
           {
             headers: {
               token:

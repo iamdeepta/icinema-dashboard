@@ -205,14 +205,14 @@ const CatalogContent = () => {
                           <td>
                             <div className="main__table-text">
                               <img
-                                src={AppUrl.base_url + item.imgTitle}
+                                src={AppUrl.file_url + item.imgTitle}
                                 alt=""
                               />
                             </div>
                           </td>
                           <td>
                             <div className="main__table-text">
-                              <img src={AppUrl.base_url + item.imgSm} alt="" />
+                              <img src={AppUrl.file_url + item.imgSm} alt="" />
                             </div>
                           </td>
                           <td>

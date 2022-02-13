@@ -148,20 +148,25 @@ const CatalogEdit = ({ mov }) => {
       formData.append("img", e.target.files[0]);
 
       try {
-        const res = await axios.post("/uploadfiles", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
+        const res = await axios.post(
+          AppUrl.base_url + "/uploadfiles",
+          formData,
+          {
+            headers: {
+              token:
+                "Bearer " +
+                JSON.parse(localStorage.getItem("user")).accessToken,
+              "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+              setUploadPercentage(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            },
+          }
+        );
 
         //console.log(res);
 
@@ -201,20 +206,25 @@ const CatalogEdit = ({ mov }) => {
       formData.append("imgSm", e.target.files[0]);
 
       try {
-        const res = await axios.post("/uploadfiles1", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage1(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
+        const res = await axios.post(
+          AppUrl.base_url + "/uploadfiles1",
+          formData,
+          {
+            headers: {
+              token:
+                "Bearer " +
+                JSON.parse(localStorage.getItem("user")).accessToken,
+              "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+              setUploadPercentage1(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            },
+          }
+        );
 
         //console.log(res);
 
@@ -255,20 +265,25 @@ const CatalogEdit = ({ mov }) => {
       formData.append("imgTitle", e.target.files[0]);
 
       try {
-        const res = await axios.post("/uploadfiles2", formData, {
-          headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage2(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
+        const res = await axios.post(
+          AppUrl.base_url + "/uploadfiles2",
+          formData,
+          {
+            headers: {
+              token:
+                "Bearer " +
+                JSON.parse(localStorage.getItem("user")).accessToken,
+              "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+              setUploadPercentage2(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            },
+          }
+        );
 
         //console.log(res);
 
@@ -469,7 +484,7 @@ const CatalogEdit = ({ mov }) => {
                           />
                           <img
                             id="form__img"
-                            src={AppUrl.base_url + img}
+                            src={AppUrl.file_url + img}
                             alt=" "
                           />
                         </div>
@@ -491,7 +506,7 @@ const CatalogEdit = ({ mov }) => {
                           />
                           <img
                             id="form__img"
-                            src={AppUrl.base_url + imgSm}
+                            src={AppUrl.file_url + imgSm}
                             alt=" "
                           />
                         </div>
@@ -513,7 +528,7 @@ const CatalogEdit = ({ mov }) => {
                           />
                           <img
                             id="form__img"
-                            src={AppUrl.base_url + imgTitle}
+                            src={AppUrl.file_url + imgTitle}
                             alt=" "
                           />
                         </div>

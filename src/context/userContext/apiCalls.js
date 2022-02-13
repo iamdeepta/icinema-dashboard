@@ -8,11 +8,12 @@ import {
   getUsersSuccess,
   //   updateMovieStart,
 } from "./UserActions";
+import AppUrl from "../../classes/AppUrl";
 
 export const getUsers = async (dispatch) => {
   dispatch(getUsersStart());
   try {
-    const res = await axios.get("/users", {
+    const res = await axios.get(AppUrl.base_url + "/users", {
       headers: {
         token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
       },
@@ -42,7 +43,7 @@ export const getUsers = async (dispatch) => {
 export const deleteUser = async (id, dispatch) => {
   dispatch(deleteUserStart());
   try {
-    await axios.delete("/users/" + id, {
+    await axios.delete(AppUrl.base_url + "/users/" + id, {
       headers: {
         token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
       },

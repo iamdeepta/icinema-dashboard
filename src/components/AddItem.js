@@ -10,6 +10,23 @@ import "./css/add_item.scss";
 import Select from "react-select";
 import { ListContext } from "../context/listContext/ListContext";
 import { getLists } from "../context/listContext/apiCalls";
+import AppUrl from "../classes/AppUrl";
+
+import S3FileUpload from "react-s3";
+//import ReactS3 from "react-s3";
+
+//Optional Import
+import { uploadFile } from "react-s3";
+
+// const config = {
+//   bucketName: "files.icinemabd.com",
+//   dirName: "images" /* optional */,
+//   region: "us-east-1",
+//   accessKeyId: process.env.REACT_APP_ACESS_KEY_ID,
+//   secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+// };
+
+//require("dotenv").config();
 
 const AddItem = () => {
   const [title, setTitle] = useState(null);
@@ -43,6 +60,12 @@ const AddItem = () => {
   const [season_bn, setSeasonBn] = useState(null);
   const [totalSeason, setTotalSeason] = useState(null);
   const [totalSeason_bn, setTotalSeasonBn] = useState(null);
+
+  const [imgUrl, setImgUrl] = useState(null);
+  const [imgTitleUrl, setImgTitleUrl] = useState(null);
+  const [imgSmUrl, setImgSmUrl] = useState(null);
+  const [trailerUrl, setTrailerUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -150,11 +173,50 @@ const AddItem = () => {
         formData.append("trailer", trailer);
       }
 
+      // S3FileUpload.uploadFile(img, config)
+      //   .then((data) => {
+      //     console.log(data.location);
+      //   })
+      //   .catch((err) => console.log(err));
+
+      //upload files to aws s3 bucket
+      // get secure url from our server
+      const { url } = await fetch(AppUrl.base_url + "/uploadFile").then((res) =>
+        res.json()
+      );
+
+      const { imgTitle_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/imgTitle"
+      ).then((res) => res.json());
+
+      const { imgSm_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/imgSm"
+      ).then((res) => res.json());
+
+      const { trailer_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/trailer"
+      ).then((res) => res.json());
+
+      const { video_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/video"
+      ).then((res) => res.json());
+      //console.log(url);
+
+      // // post the image direclty to the s3 bucket
+      // await fetch(url, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      //   body: img,
+      // });
+
+      // const imageUrl = url.split("?")[0];
+      // console.log(imageUrl);
+
       try {
-        const res = await axios.post("/upload", formData, {
+        const res = await axios.put(url, img, {
           headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
@@ -168,7 +230,7 @@ const AddItem = () => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgUrl(url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile({
@@ -189,10 +251,8 @@ const AddItem = () => {
       }
 
       try {
-        const res = await axios.post("/upload1", formData, {
+        const res = await axios.put(imgTitle_url, imgTitle, {
           headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
@@ -206,7 +266,7 @@ const AddItem = () => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgTitleUrl(imgTitle_url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile1({
@@ -226,11 +286,47 @@ const AddItem = () => {
         setUploadPercentage1(0);
       }
 
+      // try {
+      //   const res = await axios.post(AppUrl.base_url + "/upload1", formData, {
+      //     headers: {
+      //       token:
+      //         "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //     onUploadProgress: (progressEvent) => {
+      //       setUploadPercentage1(
+      //         parseInt(
+      //           Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      //         )
+      //       );
+      //     },
+      //   });
+
+      //   // Clear percentage
+      //   //setTimeout(() => setUploadPercentage(0), 10000);
+
+      //   const { fileName, filePath } = res.data;
+
+      //   setUploadedFile1({
+      //     fileName,
+      //     filePath,
+      //   });
+
+      //   //console.log(uploadedFile);
+
+      //   setMessage("File Uploaded");
+      // } catch (err) {
+      //   if (err.response.status === 500) {
+      //     toast.error("There was a problem with the server");
+      //   } else {
+      //     toast.error(err.response.data.msg);
+      //   }
+      //   setUploadPercentage1(0);
+      // }
+
       try {
-        const res = await axios.post("/upload2", formData, {
+        const res = await axios.put(imgSm_url, imgSm, {
           headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
@@ -244,7 +340,7 @@ const AddItem = () => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgSmUrl(imgSm_url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile2({
@@ -265,10 +361,8 @@ const AddItem = () => {
       }
 
       try {
-        const res = await axios.post("/upload3", formData, {
+        const res = await axios.put(trailer_url, trailer, {
           headers: {
-            token:
-              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
@@ -282,7 +376,7 @@ const AddItem = () => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setTrailerUrl(trailer_url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile3({
@@ -307,11 +401,8 @@ const AddItem = () => {
 
       if (type !== "Music") {
         try {
-          const res = await axios.post("/upload4", formData, {
+          const res = await axios.put(video_url, video, {
             headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
               "Content-Type": "multipart/form-data",
             },
             onUploadProgress: (progressEvent) => {
@@ -325,7 +416,7 @@ const AddItem = () => {
 
           // Clear percentage
           //setTimeout(() => setUploadPercentage(0), 10000);
-
+          setVideoUrl(video_url.split("?")[0]);
           const { fileName, filePath } = res.data;
 
           setUploadedFile4({
@@ -406,11 +497,12 @@ const AddItem = () => {
           season_bn,
           totalSeason,
           totalSeason_bn,
-          img: uploadedFile.filePath,
-          imgTitle: uploadedFile2.filePath,
-          imgSm: uploadedFile1.filePath,
-          video: uploadedFile3.filePath,
-          trailer: uploadedFile4.filePath,
+          img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
+          imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
+          imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
+          video: videoUrl.substring(videoUrl.lastIndexOf("/") + 1),
+          trailer: trailerUrl.substring(trailerUrl.lastIndexOf("/") + 1),
+          // trailer: uploadedFile4.filePath,
         },
         dispatch
       );

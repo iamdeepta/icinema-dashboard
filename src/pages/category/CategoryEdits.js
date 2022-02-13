@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CategoryEdit from "../../components/CategoryEdit";
+import AppUrl from "../../classes/AppUrl";
 
 const CategoryEdits = () => {
   const { pathname } = useLocation();
@@ -23,7 +24,7 @@ const CategoryEdits = () => {
     const getCategories = async () => {
       try {
         const res = await axios.get(
-          "/lists/find/" + pathname.split("/").pop(),
+          AppUrl.base_url + "/lists/find/" + pathname.split("/").pop(),
           {
             headers: {
               token:
