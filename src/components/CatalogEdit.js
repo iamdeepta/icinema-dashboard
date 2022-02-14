@@ -42,6 +42,10 @@ const CatalogEdit = ({ mov }) => {
   const [imgSm, setImgSm] = useState(mov.imgSm);
   const [imgTitle, setImgTitle] = useState(mov.imgTitle);
 
+  const [imgUrl, setImgUrl] = useState(mov.img);
+  const [imgSmUrl, setImgSmUrl] = useState(mov.imgSm);
+  const [imgTitleUrl, setImgTitleUrl] = useState(mov.imgTitle);
+
   const [update_img, setUpdateImg] = useState(null);
 
   const [episode, setEpisode] = useState(mov.episode);
@@ -147,32 +151,29 @@ const CatalogEdit = ({ mov }) => {
       const formData = new FormData();
       formData.append("img", e.target.files[0]);
 
+      const { url } = await fetch(AppUrl.base_url + "/uploadFile").then((res) =>
+        res.json()
+      );
+
       try {
-        const res = await axios.post(
-          AppUrl.base_url + "/uploadfiles",
-          formData,
-          {
-            headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (progressEvent) => {
-              setUploadPercentage(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
-              );
-            },
-          }
-        );
+        const res = await axios.put(url, img, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+          },
+        });
 
         //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgUrl(url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile({
@@ -205,32 +206,29 @@ const CatalogEdit = ({ mov }) => {
       const formData = new FormData();
       formData.append("imgSm", e.target.files[0]);
 
+      const { imgSm_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/imgSm"
+      ).then((res) => res.json());
+
       try {
-        const res = await axios.post(
-          AppUrl.base_url + "/uploadfiles1",
-          formData,
-          {
-            headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (progressEvent) => {
-              setUploadPercentage1(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
-              );
-            },
-          }
-        );
+        const res = await axios.put(imgSm_url, imgSm, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage1(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+          },
+        });
 
         //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgSmUrl(imgSm_url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile1({
@@ -264,32 +262,29 @@ const CatalogEdit = ({ mov }) => {
       const formData = new FormData();
       formData.append("imgTitle", e.target.files[0]);
 
+      const { imgTitle_url } = await fetch(
+        AppUrl.base_url + "/uploadFile/imgTitle"
+      ).then((res) => res.json());
+
       try {
-        const res = await axios.post(
-          AppUrl.base_url + "/uploadfiles2",
-          formData,
-          {
-            headers: {
-              token:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("user")).accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (progressEvent) => {
-              setUploadPercentage2(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
-              );
-            },
-          }
-        );
+        const res = await axios.put(imgTitle_url, imgTitle, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage2(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+          },
+        });
 
         //console.log(res);
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-
+        setImgTitleUrl(imgTitle_url.split("?")[0]);
         const { fileName, filePath } = res.data;
 
         setUploadedFile2({
@@ -432,9 +427,10 @@ const CatalogEdit = ({ mov }) => {
         season_bn,
         totalSeason,
         totalSeason_bn,
-        img: uploadedFile.filePath,
-        imgSm: uploadedFile1.filePath,
-        imgTitle: uploadedFile2.filePath,
+        img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
+        imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
+        imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
+        // imgTitle: uploadedFile2.filePath,
       },
       id,
       dispatch
