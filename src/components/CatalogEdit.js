@@ -156,7 +156,7 @@ const CatalogEdit = ({ mov }) => {
       );
 
       try {
-        const res = await axios.put(url, img, {
+        const res = await axios.put(url, e.target.files[0], {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -173,7 +173,8 @@ const CatalogEdit = ({ mov }) => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-        setImgUrl(url.split("?")[0]);
+        setImgUrl(url.substring(url.lastIndexOf("/") + 1).split("?")[0]);
+        //setImgUrl(imgUrl.substring(imgUrl.lastIndexOf("/") + 1));
         const { fileName, filePath } = res.data;
 
         setUploadedFile({
@@ -211,7 +212,7 @@ const CatalogEdit = ({ mov }) => {
       ).then((res) => res.json());
 
       try {
-        const res = await axios.put(imgSm_url, imgSm, {
+        const res = await axios.put(imgSm_url, e.target.files[0], {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -228,7 +229,10 @@ const CatalogEdit = ({ mov }) => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-        setImgSmUrl(imgSm_url.split("?")[0]);
+        setImgSmUrl(
+          imgSm_url.substring(imgSm_url.lastIndexOf("/") + 1).split("?")[0]
+        );
+        //setImgSmUrl(imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1));
         const { fileName, filePath } = res.data;
 
         setUploadedFile1({
@@ -267,7 +271,7 @@ const CatalogEdit = ({ mov }) => {
       ).then((res) => res.json());
 
       try {
-        const res = await axios.put(imgTitle_url, imgTitle, {
+        const res = await axios.put(imgTitle_url, e.target.files[0], {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -284,7 +288,12 @@ const CatalogEdit = ({ mov }) => {
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
-        setImgTitleUrl(imgTitle_url.split("?")[0]);
+        setImgTitleUrl(
+          imgTitle_url
+            .substring(imgTitle_url.lastIndexOf("/") + 1)
+            .split("?")[0]
+        );
+        //setImgTitleUrl(imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1));
         const { fileName, filePath } = res.data;
 
         setUploadedFile2({
@@ -427,9 +436,9 @@ const CatalogEdit = ({ mov }) => {
         season_bn,
         totalSeason,
         totalSeason_bn,
-        img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
-        imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
-        imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
+        img: imgUrl,
+        imgSm: imgSmUrl,
+        imgTitle: imgTitleUrl,
         // imgTitle: uploadedFile2.filePath,
       },
       id,
