@@ -42,7 +42,9 @@ const AddCategory = () => {
         toast.success("Added Successfully");
         setTitle(null);
 
-        window.location.reload();
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       } else {
         toast.error("This title is created before");
       }

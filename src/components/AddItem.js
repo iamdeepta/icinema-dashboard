@@ -360,53 +360,14 @@ const AddItem = () => {
         setUploadPercentage2(0);
       }
 
-      try {
-        const res = await axios.put(trailer_url, trailer, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage3(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
-
-        // Clear percentage
-        //setTimeout(() => setUploadPercentage(0), 10000);
-        setTrailerUrl(trailer_url.split("?")[0]);
-        const { fileName, filePath } = res.data;
-
-        setUploadedFile3({
-          fileName,
-          filePath,
-        });
-
-        //console.log(uploadedFile);
-
-        setMessage("File Uploaded");
-        if (type === "Music") {
-          toast.success("You can publish now");
-        }
-      } catch (err) {
-        if (err.response.status === 500) {
-          toast.error("There was a problem with the server");
-        } else {
-          toast.error(err.response.data.msg);
-        }
-        setUploadPercentage3(0);
-      }
-
       if (type !== "Music") {
         try {
-          const res = await axios.put(video_url, video, {
+          const res = await axios.put(trailer_url, trailer, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
             onUploadProgress: (progressEvent) => {
-              setUploadPercentage4(
+              setUploadPercentage3(
                 parseInt(
                   Math.round((progressEvent.loaded * 100) / progressEvent.total)
                 )
@@ -416,10 +377,10 @@ const AddItem = () => {
 
           // Clear percentage
           //setTimeout(() => setUploadPercentage(0), 10000);
-          setVideoUrl(video_url.split("?")[0]);
+          setTrailerUrl(trailer_url.split("?")[0]);
           const { fileName, filePath } = res.data;
 
-          setUploadedFile4({
+          setUploadedFile3({
             fileName,
             filePath,
           });
@@ -427,16 +388,57 @@ const AddItem = () => {
           //console.log(uploadedFile);
 
           setMessage("File Uploaded");
-          toast.success("You can publish now");
+          if (type === "Music") {
+            toast.success("You can publish now");
+          }
         } catch (err) {
           if (err.response.status === 500) {
             toast.error("There was a problem with the server");
           } else {
             toast.error(err.response.data.msg);
           }
-          setUploadPercentage4(0);
+          setUploadPercentage3(0);
         }
       }
+
+      //if (type !== "Music") {
+      try {
+        const res = await axios.put(video_url, video, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage4(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+          },
+        });
+
+        // Clear percentage
+        //setTimeout(() => setUploadPercentage(0), 10000);
+        setVideoUrl(video_url.split("?")[0]);
+        const { fileName, filePath } = res.data;
+
+        setUploadedFile4({
+          fileName,
+          filePath,
+        });
+
+        //console.log(uploadedFile);
+
+        setMessage("File Uploaded");
+        toast.success("You can publish now");
+      } catch (err) {
+        if (err.response.status === 500) {
+          toast.error("There was a problem with the server");
+        } else {
+          toast.error(err.response.data.msg);
+        }
+        setUploadPercentage4(0);
+      }
+      //}
     }
   };
 
@@ -469,43 +471,84 @@ const AddItem = () => {
     ) {
       toast.error("Please fill up all the empty fields");
     } else {
-      createMovie(
-        {
-          title,
-          title_bn,
-          desc,
-          desc_bn,
-          year,
-          year_bn,
-          time,
-          time_bn,
-          genre,
-          genre_bn,
-          age,
-          age_bn,
-          cast,
-          cast_bn,
-          director,
-          director_bn,
-          writer,
-          writer_bn,
-          type,
-          category,
-          episode,
-          episode_bn,
-          season,
-          season_bn,
-          totalSeason,
-          totalSeason_bn,
-          img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
-          imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
-          imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
-          video: videoUrl.substring(videoUrl.lastIndexOf("/") + 1),
-          trailer: trailerUrl.substring(trailerUrl.lastIndexOf("/") + 1),
-          // trailer: uploadedFile4.filePath,
-        },
-        dispatch
-      );
+      if (type !== "Music") {
+        createMovie(
+          {
+            title,
+            title_bn,
+            desc,
+            desc_bn,
+            year,
+            year_bn,
+            time,
+            time_bn,
+            genre,
+            genre_bn,
+            age,
+            age_bn,
+            cast,
+            cast_bn,
+            director,
+            director_bn,
+            writer,
+            writer_bn,
+            type,
+            category,
+            episode,
+            episode_bn,
+            season,
+            season_bn,
+            totalSeason,
+            totalSeason_bn,
+            img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
+            imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
+            imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
+            video: videoUrl.substring(videoUrl.lastIndexOf("/") + 1),
+            trailer: trailerUrl.substring(trailerUrl.lastIndexOf("/") + 1),
+            // trailer: uploadedFile4.filePath,
+          },
+          dispatch
+        );
+      } else {
+        createMovie(
+          {
+            title,
+            title_bn,
+            desc,
+            desc_bn,
+            year,
+            year_bn,
+            time,
+            time_bn,
+            genre,
+            genre_bn,
+            age,
+            age_bn,
+            cast,
+            cast_bn,
+            director,
+            director_bn,
+            writer,
+            writer_bn,
+            type,
+            category,
+            episode,
+            episode_bn,
+            season,
+            season_bn,
+            totalSeason,
+            totalSeason_bn,
+            img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
+            imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
+            imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
+            video: videoUrl.substring(videoUrl.lastIndexOf("/") + 1),
+            // trailer: trailerUrl,
+            // trailer: uploadedFile4.filePath,
+          },
+          dispatch
+        );
+      }
+
       if (!error) {
         toast.success("Uploaded Successfully");
         setTitle(null);
@@ -547,7 +590,11 @@ const AddItem = () => {
         setUploadPercentage2(0);
         setUploadPercentage3(0);
         setUploadPercentage4(0);
-        window.location.reload();
+        if (!isFetching) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        }
       } else {
         toast.error("This title is created before");
       }
@@ -622,7 +669,7 @@ const AddItem = () => {
                             id="form__img-upload"
                             name="form__img-upload"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             onChange={(e) => selectCoverImage(e)}
                           />
                           <img id="form__img" src={cover_pic} alt=" " />
@@ -1306,7 +1353,7 @@ const AddItem = () => {
                             name="gallery"
                             className="form__gallery-upload"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             multiple
                             onChange={(e) => changeTitlePic(e)}
                           />
@@ -1324,7 +1371,7 @@ const AddItem = () => {
                             name="gallery"
                             className="form__gallery-upload"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             multiple
                             onChange={(e) => changeSmallPic(e)}
                           />
@@ -1457,13 +1504,13 @@ const AddItem = () => {
                         <>
                           <div className="col-12 col-lg-12">
                             <div className="form__video">
-                              <label id="music" for="form__video-upload3">
+                              <label id="movie1" for="form__video-upload3">
                                 {audio}
                               </label>
                               <input
-                                data-name="#music"
+                                data-name="#movie1"
                                 id="form__video-upload3"
-                                name="music"
+                                name="movie"
                                 className="form__video-upload"
                                 type="file"
                                 accept="audio/*"

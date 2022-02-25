@@ -484,7 +484,7 @@ const CatalogEdit = ({ mov }) => {
                             id="form__img-upload"
                             name="form__img-upload"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             onChange={(e) => selectCoverImage(e)}
                           />
                           <img
@@ -506,7 +506,7 @@ const CatalogEdit = ({ mov }) => {
                             id="form__img-upload1"
                             name="form__img-upload1"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             onChange={(e) => selectSmallImage(e)}
                           />
                           <img
@@ -528,7 +528,7 @@ const CatalogEdit = ({ mov }) => {
                             id="form__img-upload2"
                             name="form__img-upload2"
                             type="file"
-                            accept=".png, .jpg, .jpeg"
+                            accept=".png, .jpg, .jpeg, .webp"
                             onChange={(e) => selectTitleImage(e)}
                           />
                           <img
