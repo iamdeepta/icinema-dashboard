@@ -5,6 +5,7 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { AuthContext } from "./context/authContext/AuthContext";
+import CompressImg from "./pages/compressImg/CompressImg";
 //import Catalog from "./pages/catalog/Catalog";
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -85,6 +86,12 @@ const App = () => {
             exact
             path="/signout"
             element={!user ? <SignOut /> : <Navigate to="/" />}
+          />
+
+          <Route
+            exact
+            path="/compress-image"
+            element={user ? <CompressImg /> : <Navigate to="/signout" />}
           />
         </Routes>
       </Suspense>

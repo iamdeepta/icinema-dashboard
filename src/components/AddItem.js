@@ -106,6 +106,8 @@ const AddItem = () => {
   const [trailers, setTrailers] = useState("Upload trailer (mp4)");
   const [audio, setAudio] = useState("Upload audio");
 
+  const [imgPic, setImgPic] = useState(null);
+
   useEffect(() => {
     setTime(null);
     setTimeBn(null);
@@ -125,6 +127,29 @@ const AddItem = () => {
     //setThumbnail(e.target.files[0].name);
     setCoverPic(e.target.files[0].name);
     setImg(e.target.files[0]);
+    //console.log(e.target.files[0]);
+
+    setImgPic(URL.createObjectURL(e.target.files[0]));
+    let src = URL.createObjectURL(e.target.files[0]);
+
+    //convert image to canvas
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    let coverImage = new Image();
+    coverImage.src = src;
+
+    coverImage.onload = function () {
+      canvas.width = coverImage.width;
+      canvas.height = coverImage.height;
+      ctx.drawImage(coverImage, 0, 0);
+
+      //convert canvas to webp
+      let webpCover = canvas.toDataURL("image/webp");
+      setImgPic(webpCover);
+      //setImg(e.target.files[0]);
+      //console.log(webpCover);
+    };
 
     //console.log(thumbnail);
   };
@@ -669,10 +694,10 @@ const AddItem = () => {
                             id="form__img-upload"
                             name="form__img-upload"
                             type="file"
-                            accept=".png, .jpg, .jpeg, .webp"
+                            accept=".png, .jpg, .jpeg, .webp, image/*"
                             onChange={(e) => selectCoverImage(e)}
                           />
-                          <img id="form__img" src={cover_pic} alt=" " />
+                          <img id="form__img" src={imgPic} alt=" " />
                         </div>
                       </div>
                     </div>
