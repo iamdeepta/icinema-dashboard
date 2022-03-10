@@ -1,7 +1,9 @@
 export default class AppUrl {
   //static base_url = "http://localhost:8800/api";
 
-  static base_url = "https://designhubtechnologies.com/api";
+  //static base_url = "https://designhubtechnologies.com/api";
+  //http://ec2-44-202-81-66.compute-1.amazonaws.com/api
+  static base_url = "https://api.icinemabd.com/api";
   static file_url = "https://d1uecg5zfvo0cq.cloudfront.net/";
   //   static image_url = "http://localhost:3000/";
   //   static image_url_backend = "http://localhost:8000/";

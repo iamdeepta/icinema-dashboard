@@ -54,6 +54,8 @@ const CatalogEdit = ({ mov }) => {
   const [season_bn, setSeasonBn] = useState(mov.season_bn);
   const [totalSeason, setTotalSeason] = useState(mov.totalSeason);
   const [totalSeason_bn, setTotalSeasonBn] = useState(mov.totalSeason_bn);
+  const [rating, setRating] = useState(mov.rating);
+  const [rating_bn, setRatingBn] = useState(mov.rating_bn);
 
   const [uploadedFile, setUploadedFile] = useState({});
   const [uploadedFile1, setUploadedFile1] = useState({});
@@ -95,6 +97,8 @@ const CatalogEdit = ({ mov }) => {
     setSeasonBn(mov.season_bn);
     setTotalSeason(mov.totalSeason);
     setTotalSeasonBn(mov.totalSeason_bn);
+    setRating(mov.rating);
+    setRatingBn(mov.rating_bn);
     // } else {
     //   setEpisode(null);
     //   setSeason(null);
@@ -436,6 +440,8 @@ const CatalogEdit = ({ mov }) => {
         season_bn,
         totalSeason,
         totalSeason_bn,
+        rating,
+        rating_bn,
         img: imgUrl,
         imgSm: imgSmUrl,
         imgTitle: imgTitleUrl,
@@ -877,6 +883,30 @@ const CatalogEdit = ({ mov }) => {
                             }
                             value={writer_bn}
                             onChange={(e) => setWriterBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Rating"
+                            value={rating}
+                            onChange={(e) => setRating(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Rating (BN)"
+                            value={rating_bn}
+                            onChange={(e) => setRatingBn(e.target.value)}
                           />
                         </div>
                       </div>

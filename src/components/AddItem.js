@@ -60,6 +60,8 @@ const AddItem = () => {
   const [season_bn, setSeasonBn] = useState(null);
   const [totalSeason, setTotalSeason] = useState(null);
   const [totalSeason_bn, setTotalSeasonBn] = useState(null);
+  const [rating, setRating] = useState(null);
+  const [rating_bn, setRatingBn] = useState(null);
 
   const [imgUrl, setImgUrl] = useState(null);
   const [imgTitleUrl, setImgTitleUrl] = useState(null);
@@ -117,6 +119,8 @@ const AddItem = () => {
     setEpisodeBn(null);
     setTotalSeason(null);
     setTotalSeasonBn(null);
+    setRating(null);
+    setRatingBn(null);
     if (type === "Music") {
       setTrailer(null);
       setTrailers("Upload trailer (mp4)");
@@ -487,6 +491,8 @@ const AddItem = () => {
       !director_bn ||
       !writer ||
       !writer_bn ||
+      !rating ||
+      !rating_bn ||
       !type ||
       !img ||
       !imgTitle ||
@@ -525,6 +531,8 @@ const AddItem = () => {
             season_bn,
             totalSeason,
             totalSeason_bn,
+            rating,
+            rating_bn,
             img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
             imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
             imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
@@ -563,6 +571,8 @@ const AddItem = () => {
             season_bn,
             totalSeason,
             totalSeason_bn,
+            rating,
+            rating_bn,
             img: imgUrl.substring(imgUrl.lastIndexOf("/") + 1),
             imgTitle: imgTitleUrl.substring(imgTitleUrl.lastIndexOf("/") + 1),
             imgSm: imgSmUrl.substring(imgSmUrl.lastIndexOf("/") + 1),
@@ -600,6 +610,8 @@ const AddItem = () => {
         setSeasonBn(null);
         setTotalSeason(null);
         setTotalSeasonBn(null);
+        setRating(null);
+        setRatingBn(null);
         setCoverPic("Upload cover image");
         setSmallPic("Upload small image");
         setTitlePic("Upload title image");
@@ -1055,6 +1067,30 @@ const AddItem = () => {
                             }
                             value={writer_bn}
                             onChange={(e) => setWriterBn(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Rating"
+                            value={rating}
+                            onChange={(e) => setRating(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-sm-6 col-lg-6">
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            className="form__input"
+                            placeholder="Rating (BN)"
+                            value={rating_bn}
+                            onChange={(e) => setRatingBn(e.target.value)}
                           />
                         </div>
                       </div>
