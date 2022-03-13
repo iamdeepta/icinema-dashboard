@@ -92,7 +92,9 @@ const AddItem = () => {
   }, [listDispatch]);
 
   let options = [];
-  lists.map((item) => options.push({ value: item._id, label: item.title }));
+  lists.map((item) =>
+    options.push({ value: item._id, label: `${item.title} - ${item.type}` })
+  );
 
   // const options = [
   //   { value: "chocolate", label: "Chocolate" },
