@@ -81,6 +81,8 @@ const AddItem = () => {
   const [uploadPercentage1, setUploadPercentage1] = useState(0);
   const [uploadPercentage2, setUploadPercentage2] = useState(0);
 
+  const [vid_type, setVidType] = useState(null);
+
   const { isFetching, error, dispatch } = useContext(MovieContext);
 
   const { lists, dispatch: listDispatch } = useContext(ListContext);
@@ -176,11 +178,14 @@ const AddItem = () => {
     setVideos(e.target.files[0].name);
     setAudio(e.target.files[0].name);
     setVideo(e.target.files[0]);
+    setVidType(e.target.files[0].type);
+    //console.log(e.target.files[0].type);
   };
 
   const changeTrailer = (e) => {
     setTrailers(e.target.files[0].name);
     setTrailer(e.target.files[0]);
+    setVidType(e.target.files[0].type);
   };
 
   const uploadMovie = async () => {
@@ -395,7 +400,7 @@ const AddItem = () => {
         try {
           const res = await axios.put(trailer_url, trailer, {
             headers: {
-              "Content-Type": "multipart/form-data",
+              "Content-Type": `${vid_type}`,
             },
             onUploadProgress: (progressEvent) => {
               setUploadPercentage3(
@@ -434,18 +439,35 @@ const AddItem = () => {
 
       //if (type !== "Music") {
       try {
-        const res = await axios.put(video_url, video, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            setUploadPercentage4(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-          },
-        });
+        var res;
+
+        if (type !== "Music") {
+          res = await axios.put(video_url, video, {
+            headers: {
+              "Content-Type": `${vid_type}`,
+            },
+            onUploadProgress: (progressEvent) => {
+              setUploadPercentage4(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            },
+          });
+        } else {
+          res = await axios.put(video_url, video, {
+            headers: {
+              "Content-Type": `${vid_type}`,
+            },
+            onUploadProgress: (progressEvent) => {
+              setUploadPercentage4(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            },
+          });
+        }
 
         // Clear percentage
         //setTimeout(() => setUploadPercentage(0), 10000);
@@ -1509,7 +1531,7 @@ const AddItem = () => {
                                 name="movie"
                                 className="form__video-upload"
                                 type="file"
-                                accept="video/mp4,video/x-m4v,video/*,.mkv"
+                                accept="video/mp4,video/x-m4v,video/*,.mkv,video/x-mpegURL,.ts,application/dash+xml,.m4s,.fmp4, .m3u8, .mpd, .m3u"
                                 onChange={(e) => changeVideo(e)}
                               />
                             </div>
@@ -1526,7 +1548,7 @@ const AddItem = () => {
                                 name="trailer"
                                 className="form__video-upload"
                                 type="file"
-                                accept="video/mp4,video/x-m4v,video/*, .mkv"
+                                accept="video/mp4,video/x-m4v,video/*, .mkv,video/x-mpegURL,.ts,application/dash+xml,.m4s,.fmp4, .m3u8, .mpd, .m3u"
                                 onChange={(e) => changeTrailer(e)}
                               />
                             </div>
